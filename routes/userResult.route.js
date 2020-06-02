@@ -103,4 +103,73 @@ quizRoute.route('/quizDetailsByUser/:userName').get((req, res) => {
               )
 
           })
+
+  //Get Partner Interview Candidate list
+  quizRoute.route('/getPartnerInterviewList').get((req, res) => {
+    Results.aggregate([
+     {$match: {skip_stage2:true, skip_stage3:false}},
+     {$lookup:
+       {   from: "candidate",
+               localField: "userName",
+               foreignField: "username",
+               as: "result_users"
+       }
+     },
+     {$sort:
+       {
+         'updatedDate': -1
+       },
+
+     }],
+     (error,output) => {
+       if (error) {
+         return next(error)
+       } else {
+         res.json(output)
+       }
+     });
+  })
+
+  //Read Partner Interview Candidate Details
+  quizRoute.route('/readPartnerInterviewDetails/:userName').get((req, res) => {
+    Results.aggregate([
+     {$match: {userName:req.params.userName, skip_stage2:true,skip_stage3:false}},
+     {$lookup:
+       {   from: "candidate",
+               localField: "userName",
+               foreignField: "username",
+               as: "result_users"
+       }
+     },
+     {$sort:
+       {
+         'updatedDate': -1
+       },
+
+     }],
+     (error,output) => {
+       if (error) {
+         return next(error)
+       } else {
+         res.json(output)
+       }
+     });
+  })
+
+
+// Update Results
+quizRoute.route('/updatePartnerDetails/:id').post((req, res, next) => {
+  Results.findByIdAndUpdate(req.params.id,
+  {$set: {managementResult:req.body.finalResult,managementFeedback:req.body.partnerFeedback,
+          managerName:req.body.managerName,managementAssessmentDate:req.body.managementAssessmentDate,
+          skip_stage3:req.body.skip_stage3}},
+  (error, data) => {
+    if (error) {
+      console.log(error);
+      return next(error);
+    } else {
+      res.json(data);
+    }
+  })
+})
 module.exports = quizRoute;
