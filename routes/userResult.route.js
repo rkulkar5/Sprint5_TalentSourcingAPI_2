@@ -157,6 +157,33 @@ quizRoute.route('/quizDetailsByUser/:userName').get((req, res) => {
   })
 
 
+  //Get Operations Candidate list
+  quizRoute.route('/getOperationsCandidateList').get((req, res) => {
+    Results.aggregate([
+     {$match: {skip_stage1:true,skip_stage2:true,skip_stage3:true,skip_stage4:false}},
+     {$lookup:
+       {   from: "candidate",
+               localField: "userName",
+               foreignField: "username",
+               as: "result_users"
+       }
+     },
+     {$sort:
+       {
+         'updatedDate': -1
+       },
+
+     }],
+     (error,output) => {
+       if (error) {
+         return next(error)
+       } else {
+         res.json(output)
+       }
+     });
+  })
+
+
 // Update Results
 quizRoute.route('/updatePartnerDetails/:id').post((req, res, next) => {
   Results.findByIdAndUpdate(req.params.id,
