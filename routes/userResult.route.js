@@ -200,7 +200,6 @@ quizRoute.route('/updatePartnerDetails/:id').post((req, res, next) => {
 
   //Read Operations Candidate Project Details
   quizRoute.route('/readOperationsProjectDetails/:userName').get((req, res) => {
-    console.log("Username="+req.params.userName);
     Results.aggregate([
      {$match: {userName:req.params.userName, skip_stage1:true,skip_stage2:true,skip_stage3:true,skip_stage4:false}},
      {$lookup:
