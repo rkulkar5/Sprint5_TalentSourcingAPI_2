@@ -27,6 +27,7 @@ const quizQuestionsRoute = require('./routes/questionBank.route');
 const userAnswerRoute = require('./routes/userAnswer.route');
 const loginRoute = require('./routes/login.route');
 const resultRoute = require('./routes/userResult.route');
+const projectAllocRoute = require('./routes/projectAlloc.route');
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -56,6 +57,7 @@ app.use('/api/quiz', quizQuestionsRoute)
 app.use('/api/userAnswer', userAnswerRoute)
 app.use('/api/login', loginRoute)
 app.use('/result', resultRoute)
+app.use('/projectAlloc', projectAllocRoute)
 
 
 // Create port

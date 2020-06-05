@@ -156,6 +156,21 @@ quizRoute.route('/quizDetailsByUser/:userName').get((req, res) => {
      });
   })
 
+// Update Results
+quizRoute.route('/updatePartnerDetails/:id').post((req, res, next) => {
+  Results.findByIdAndUpdate(req.params.id,
+  {$set: {managementResult:req.body.finalResult,managementFeedback:req.body.partnerFeedback,
+          managerName:req.body.managerName,managementAssessmentDate:req.body.managementAssessmentDate,
+          skip_stage3:req.body.skip_stage3}},
+  (error, data) => {
+    if (error) {
+      console.log(error);
+      return next(error);
+    } else {
+      res.json(data);
+    }
+  })
+})
 
   //Get Operations Candidate list
   quizRoute.route('/getOperationsCandidateList').get((req, res) => {
@@ -183,22 +198,33 @@ quizRoute.route('/quizDetailsByUser/:userName').get((req, res) => {
      });
   })
 
+  //Read Operations Candidate Project Details
+  quizRoute.route('/readOperationsProjectDetails/:userName').get((req, res) => {
+    console.log("Username="+req.params.userName);
+    Results.aggregate([
+     {$match: {userName:req.params.userName, skip_stage1:true,skip_stage2:true,skip_stage3:true,skip_stage4:false}},
+     {$lookup:
+       {   from: "candidate",
+               localField: "userName",
+               foreignField: "username",
+               as: "result_users"
+       }
+     },
+     {$sort:
+       {
+         'updatedDate': -1
+       },
 
-// Update Results
-quizRoute.route('/updatePartnerDetails/:id').post((req, res, next) => {
-  Results.findByIdAndUpdate(req.params.id,
-  {$set: {managementResult:req.body.finalResult,managementFeedback:req.body.partnerFeedback,
-          managerName:req.body.managerName,managementAssessmentDate:req.body.managementAssessmentDate,
-          skip_stage3:req.body.skip_stage3}},
-  (error, data) => {
-    if (error) {
-      console.log(error);
-      return next(error);
-    } else {
-      res.json(data);
-    }
+     }],
+     (error,output) => {
+       if (error) {
+         return next(error)
+       } else {
+         res.json(output)
+       }
+     });
   })
-})
+
 
  //Get Technical Interview Candidate list
  quizRoute.route('/getTechnicalInterviewList').get((req, res) => {
