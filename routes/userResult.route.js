@@ -199,4 +199,30 @@ quizRoute.route('/updatePartnerDetails/:id').post((req, res, next) => {
     }
   })
 })
+
+ //Get Technical Interview Candidate list
+ quizRoute.route('/getTechnicalInterviewList').get((req, res) => {
+  Results.aggregate([
+   {$match: {skip_stage2:true, skip_stage3:false, userScore: { $gt: 50 }}},
+   {$lookup:
+     {   from: "candidate",
+             localField: "userName",
+             foreignField: "username",
+             as: "result_users"
+     }
+   },
+   {$sort:
+     {
+       'updatedDate': -1
+     },
+
+   }],
+   (error,output) => {
+     if (error) {
+       return next(error)
+     } else {
+       res.json(output)
+     }
+   });
+})
 module.exports = quizRoute;
