@@ -54,6 +54,22 @@ quizRoute.route('/:noOfQuestions/:userName/:jrss/:technologyStream').get((req, r
   })
 })
 
+// Get pretechnical questions based on jrss
+quizRoute.route('/getPreTechQuestionanire/:jrss/:userName').get((req, res) => {
+  PreTechQuestionnaire.aggregate([{ $lookup: { from: "PreTechAssessmentAnswer", 
+  let: { qid: "$preTechQID" }, 
+  pipeline: [{ $match: { $expr: { $and: [
+    { $eq: ["$$qid", "$preTechQID"] }, 
+    { $eq: ["$userName", req.params.userName] }] } } }, 
+    { $project: { preTechQID: 1, answer: 1 } }], as: "questions" } }],(error, data) => {
+      if (error) {
+          return next(error)
+        } else {
+          res.json(data)
+        }
+      })
+    })
+
 // Get single QuestionBank
 quizRoute.route('/read/:rowNum').get((req, res) => {
   QuestionBank.find((error, data) => {
