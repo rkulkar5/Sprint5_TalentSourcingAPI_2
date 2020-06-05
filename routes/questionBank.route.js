@@ -4,6 +4,10 @@ const quizRoute = express.Router();
 
 // QuestionBank model
 let QuestionBank = require('../models/QuestionBank');
+//Pretechassesmentanswer model
+let PreTechAssessmentAnswer = require('../models/PreTechAssessmentAnswer');
+//PreTechQuestionnaire model
+let PreTechQuestionnaire = require('../models/PreTechQuestionnaire');
 
 // Add QuestionBank
 quizRoute.route('/createQuiz').post((req, res, next) => {
