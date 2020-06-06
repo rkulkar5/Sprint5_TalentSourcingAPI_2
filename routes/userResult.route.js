@@ -253,7 +253,7 @@ quizRoute.route('/updatePartnerDetails/:id').post((req, res, next) => {
 
 
 quizRoute.route("/getResultByUser/:userName/:quizNumber").get((req, res,next) => {
-  Results.findOne({username: req.params.id,quizNumber:req.params.quizNumber}, function(err,results){
+  Results.findOne({userName: req.params.userName,quizNumber:req.params.quizNumber}, function(err,results){
     if(err){
       console.log(err);
       return res.status(500).send('');
