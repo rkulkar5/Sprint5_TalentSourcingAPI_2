@@ -3,6 +3,9 @@ const Schema = mongoose.Schema;
 
 // Define collection and schema
 const ProjectAllocSchema = new Schema({
+   userName: {
+      type: String
+   },
     location: {
       type: String
    },
@@ -11,6 +14,15 @@ const ProjectAllocSchema = new Schema({
    },
    position: {
       type: String
+   },
+   comments: {
+      type: String
+   },
+   createdBy: {
+      type: String
+   },
+   createdDate: {
+      type: Date
    }
 },{
 collection: 'projectAlloc'}

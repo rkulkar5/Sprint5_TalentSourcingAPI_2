@@ -6,8 +6,7 @@ const quizRoute = express.Router();
 let ProjectAlloc = require('../models/ProjectAlloc');
 
   // Update operations Results into ProjectAlloc table
-  quizRoute.route('/insertOperatioDetails').post((req, res, next) => {
-    console.log("Inside the save results route", req.body);
+  quizRoute.route('/insertOperatioDetails').post((req, res, next) => {    
     ProjectAlloc.create(req.body, (error, data) => {
         if (error) {
           return next(error)
