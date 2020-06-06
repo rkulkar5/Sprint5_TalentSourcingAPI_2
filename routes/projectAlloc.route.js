@@ -10,8 +10,7 @@ let ProjectAlloc = require('../models/ProjectAlloc');
     ProjectAlloc.create(req.body, (error, data) => {
         if (error) {
           return next(error)
-        } else {
-            console.log("Error in ProjectAlloc router");
+        } else {            
           res.json(data)
         }
       })
