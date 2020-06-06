@@ -250,4 +250,37 @@ quizRoute.route('/updatePartnerDetails/:id').post((req, res, next) => {
      }
    });
 })
+
+
+quizRoute.route("/getResultByUser/:userName/:quizNumber").get((req, res,next) => {
+  Results.findOne({username: req.params.id,quizNumber:req.params.quizNumber}, function(err,results){
+    if(err){
+      console.log(err);
+      return res.status(500).send('');
+    }
+    if(!results){
+      return res.status(404).send();
+    }
+    return res.json(results);
+  })
+})
+
+quizRoute.route("/updateResults/:id").put((req, res,next) => {
+console.log(req.params.id);
+console.log(req.body);
+  Results.findByIdAndUpdate(req.params.id, {
+    $set: req.body    
+    }, (error, data) => {
+    if (error) {
+      console.log(error);
+      return next(error);
+    } else {
+      res.json(data)
+      console.log('Data updated successfully')
+    }
+  })
+})
+
+
+
 module.exports = quizRoute;
