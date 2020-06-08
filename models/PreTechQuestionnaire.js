@@ -20,7 +20,7 @@ let PreTechQuestionnaire = new Schema({
          type: Date
    },
 }, {
-   collection: 'PreTechQuestionnaire'
+   collection: 'preTechQuestionnaire'
 })
 
 module.exports = mongoose.model('PreTechQuestionnaire', PreTechQuestionnaire)
