@@ -300,6 +300,31 @@ console.log(req.body);
   })
 })
 
+/** Read Candidate Technical Interview Details */
+  quizRoute.route('/readCandidateTechSMEReviewDetails/:userName').get((req, res) => {
+    Results.aggregate([
+     {$match: {userName:req.params.userName}},//, skip_stage2:true,skip_stage3:false
+     {$lookup:
+       {   from: "candidate",
+               localField: "userName",
+               foreignField: "username",
+               as: "result_users"
+       }
+     },
+     {$sort:
+       {
+         'updatedDate': -1
+       },
+
+     }],
+     (error,output) => {
+       if (error) {
+         return next(error)
+       } else {
+         res.json(output)
+       }
+     });
+  })
 
 
 module.exports = quizRoute;
