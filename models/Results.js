@@ -30,17 +30,17 @@ const ResultsSchema = new Schema({
    managementFeedback: {
       type: String
    },
-   skip_stage1: {
-      type: Boolean
+   stage1_status: {
+      type: String
    },
-   skip_stage2: {
-       type: Boolean
+  stage2_status: {
+       type: String
    },
-   skip_stage3: {
-      type: Boolean
+   stage3_status: {
+      type: String
    },
-   skip_stage4: {
-      type: Boolean
+   stage4_status: {
+      type: String
    },
    smeName: {
       type: String

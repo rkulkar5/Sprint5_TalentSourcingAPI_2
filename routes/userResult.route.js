@@ -228,7 +228,9 @@ quizRoute.route('/updatePartnerDetails/:id').post((req, res, next) => {
  //Get Technical Interview Candidate list
  quizRoute.route('/getTechnicalInterviewList').get((req, res) => {
   Results.aggregate([
-   {$match: {skip_stage2:true, skip_stage3:false, userScore: { $gt: 50 }}},
+   {$match: {$or: [{stage1_status:"Completed"},{stage1_status:"Skipped"}] ,
+   $or: [{stage2_status:"Skipped"},{stage2_status:"Completed"}], 
+   stage3_status:"Not Started", userScore: { $gt: 80 }}},
    {$lookup:
      {   from: "candidate",
              localField: "userName",
