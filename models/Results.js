@@ -42,6 +42,9 @@ const ResultsSchema = new Schema({
    stage4_status: {
       type: String
    },
+   stage5_status: {
+         type: String
+   },
    smeName: {
       type: String
    },
