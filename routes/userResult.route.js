@@ -182,7 +182,11 @@ quizRoute.route('/quizDetailsByUser/:userName').get((req, res) => {
   //Get Operations Candidate list
   quizRoute.route('/getOperationsCandidateList').get((req, res) => {
     Results.aggregate([
-     {$match: {skip_stage1:true,skip_stage2:true,skip_stage3:true,skip_stage4:false}},
+     {$match: {$or:[{stage1_status:'Completed'},{stage1_status:'Skipped'}],
+               $or:[{stage2_status:'Completed'},{stage2_status:'Skipped'}],
+               $or:[{stage3_status:'Completed'},{stage3_status:'Skipped'}],
+               $or:[{stage4_status:'Completed'},{stage4_status:'Skipped'}],
+               stage5_status:'Not Started'}},
      {$lookup:
        {   from: "candidate",
                localField: "userName",
@@ -208,7 +212,12 @@ quizRoute.route('/quizDetailsByUser/:userName').get((req, res) => {
   //Read Operations Candidate Project Details
   quizRoute.route('/readOperationsProjectDetails/:userName').get((req, res) => {
     Results.aggregate([
-     {$match: {userName:req.params.userName, skip_stage1:true,skip_stage2:true,skip_stage3:true,skip_stage4:false}},
+     {$match: {userName:req.params.userName,
+               $or:[{stage1_status:'Completed'},{stage1_status:'Skipped'}],
+               $or:[{stage2_status:'Completed'},{stage2_status:'Skipped'}],
+               $or:[{stage3_status:'Completed'},{stage3_status:'Skipped'}],
+               $or:[{stage4_status:'Completed'},{stage4_status:'Skipped'}],
+               stage5_status:'Not Started'}},
      {$lookup:
        {   from: "candidate",
                localField: "userName",
