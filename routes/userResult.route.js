@@ -285,8 +285,6 @@ quizRoute.route("/getResultByUser/:userName/:quizNumber").get((req, res,next) =>
 })
 
 quizRoute.route("/updateResults/:id").put((req, res,next) => {
-console.log(req.params.id);
-console.log(req.body);
   Results.findByIdAndUpdate(req.params.id, {
     $set: req.body    
     }, (error, data) => {
