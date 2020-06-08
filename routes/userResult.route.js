@@ -240,6 +240,19 @@ quizRoute.route('/quizDetailsByUser/:userName').get((req, res) => {
      });
   })
 
+  // Update Operations Status
+  quizRoute.route('/updateOperationsStatus/:id').post((req, res, next) => { 
+    Results.findByIdAndUpdate(req.params.id,
+      {$set: {stage5_status:'Completed'}},
+      (error, data) => {
+        if (error) {
+          console.log(error);
+          return next(error);
+        } else {
+          res.json(data);
+        }
+      })
+    });
 
  //Get Technical Interview Candidate list
  quizRoute.route('/getTechnicalInterviewList').get((req, res) => {
