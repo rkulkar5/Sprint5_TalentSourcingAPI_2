@@ -17,7 +17,16 @@ jrssRoute.route('/').get((req, res) => {
   })
 })
 
-
+// Read Workflow details by jrssname
+jrssRoute.route('/readJrss/:jrssName').get((req, res) => {
+  JRSS.findOne({'jrss': req.params.jrssName}, (error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.json(data)
+    }
+  })
+})
 
 // Add jrss
 jrssRoute.route('/createJrss').post((req, res, next) => {

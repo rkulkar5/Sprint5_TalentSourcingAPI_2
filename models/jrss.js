@@ -9,7 +9,22 @@ let JRSS = new Schema({
 
    technologyStream: [
       {key:String,value:String},
-   ]
+   ],
+   stage1_OnlineTechAssessment: {
+        type:Boolean
+   },
+   stage2_PreTechAssessment: {
+        type:Boolean
+   },
+   stage3_TechAssessment: {
+        type:Boolean
+   },
+   stage4_ManagementInterview: {
+        type:Boolean
+   },
+   stage5_ProjectAllocation: {
+           type:Boolean
+   }
 }, {
    collection: 'jrss'
 })
