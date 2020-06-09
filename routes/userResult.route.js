@@ -50,11 +50,11 @@ quizRoute.route('/getresult').get((req, res) => {
  *
  *
  */
-quizRoute.route('/quizDetailsByUser/:userName').get((req, res) => {
+quizRoute.route('/quizDetailsByUser/:userName/:quizId').get((req, res) => {
   console.log('userName',req.params.userName)
   const userName=req.params.userName
   UserAnswer.aggregate(
-      [{$match : {userName:req.params.userName}},
+      [{$match : {userName:req.params.userName,quizNumber:parseInt(req.params.quizId)}},
           {$lookup:
               {
                   from: "questionBank",
@@ -73,13 +73,23 @@ quizRoute.route('/quizDetailsByUser/:userName').get((req, res) => {
                     { $project: { questionID: 1, _id: 0,question:1,jrss:1,technologyStream:1,questionType:1,answerID:1,options:1 } }
                   ], as: "userAttemptedQs"
               }
-          },
+          }/*,
           {
               $out:"userQuestions"
+          }*/
+      ],(error, data) => {
+        if (error) {
+            return next(error)
+          } else {
+           // res.json(data)
+           res.status(200).json({
+            // message: "Posts fetched successfully!",
+             results: data
+           });
           }
-      ])
+        })
 
-      Results.aggregate(
+     /* Results.aggregate(
           [
                {$match : {userName:req.params.userName}},
               {  $lookup: {
@@ -100,7 +110,7 @@ quizRoute.route('/quizDetailsByUser/:userName').get((req, res) => {
                          });
                         }
                       }
-              )
+              )*/
 
           })
 
@@ -314,7 +324,12 @@ quizRoute.route("/updateResults/:id").put((req, res,next) => {
 /** Read Candidate Technical Interview Details */
   quizRoute.route('/readCandidateTechSMEReviewDetails/:userName').get((req, res) => {
     Results.aggregate([
-     {$match: {userName:req.params.userName}},//, skip_stage2:true,skip_stage3:false
+     {$match: {userName:req.params.userName,
+              $or:[{stage1_status:'Completed'},{stage1_status:'Skipped'}],
+              $or:[{stage2_status:'Completed'},{stage2_status:'Skipped'}],
+              stage3_status:"Not Started",
+              userScore: { $gt: 80 }}
+     },
      {$lookup:
        {   from: "candidate",
                localField: "userName",
