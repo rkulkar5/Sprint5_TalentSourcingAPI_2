@@ -324,11 +324,11 @@ quizRoute.route("/updateResults/:id").put((req, res,next) => {
 /** Read Candidate Technical Interview Details */
   quizRoute.route('/readCandidateTechSMEReviewDetails/:userName').get((req, res) => {
     Results.aggregate([
-     {$match: {userName:req.params.userName,
+     {$match: {userName:req.params.userName/*,
               $or:[{stage1_status:'Completed'},{stage1_status:'Skipped'}],
               $or:[{stage2_status:'Completed'},{stage2_status:'Skipped'}],
               stage3_status:"Not Started",
-              userScore: { $gt: 80 }}
+     userScore: { $gt: 80 }*/}
      },
      {$lookup:
        {   from: "candidate",
