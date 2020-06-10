@@ -70,4 +70,19 @@ jrssRoute.route('/updateTechStream/:id').put((req, res, next) => {
     }
   })
 })
+
+// Update Workflow details for a Jrss
+jrssRoute.route('/updateWorkflow/:id').put((req, res, next) => {
+  JRSS.findByIdAndUpdate(req.params.id, {
+    $set: req.body
+  }, (error, data) => {
+    if (error) {
+      console.log(error);
+      return next(error);
+    } else {
+      res.json(data);
+      console.log('Data updated successfully');
+    }
+  })
+})
 module.exports = jrssRoute;
