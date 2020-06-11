@@ -66,7 +66,7 @@ preTechAssessmentRoute.route('/getPreTechQuestionanire/:jrss/:userName').get((re
 
   // Get  workflow stage statuses for a given userName
 preTechAssessmentRoute.route('/getStageStatus/:userName').get((req, res, next) => {
-  Results.findOne({userName: req.params.userName, userScore: { $gt: Number(80) }}, function(error,data){
+  Results.findOne({userName: req.params.userName, stage1_status: "Completed"}, function(error,data){
     if (error) {
       return next(error)
     } else {
@@ -78,7 +78,7 @@ preTechAssessmentRoute.route('/getStageStatus/:userName').get((req, res, next) =
 
 // Update the status of 2nd stage to 'Completed' 
 preTechAssessmentRoute.route('/updateStage2Status/:userName').post((req, res, next) => {
- Results.updateOne({userName: req.params.userName, userScore: { $gt: Number(80) } },
+ Results.updateOne({userName: req.params.userName, stage1_status: "Completed" },
 					{ $set: {stage2_status: "Completed"}}
       , function(error, data) {
         if (error) {
