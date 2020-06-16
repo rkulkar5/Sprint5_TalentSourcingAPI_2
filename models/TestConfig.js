@@ -11,7 +11,10 @@ let TestConfig = new Schema({
    },
    testDuration: {
          type: Number
-   }
+   },
+   passingScore: {
+      type: Number
+}
 }, {
    collection: 'testConfig'
 })

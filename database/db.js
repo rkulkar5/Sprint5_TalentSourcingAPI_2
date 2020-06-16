@@ -14,12 +14,7 @@ try {
 
 const appEnvOpts = vcapLocal ? { vcapLocal } : {}
 
-console.log("*********appEnvOpts Sprint 5 ************", appEnvOpts);
-
-
 const appEnv = cfenv.getAppEnv(appEnvOpts);
-
-console.log("*********appEnv Sprint 5 ************", appEnv);
 
 // Within the application environment (appenv) there's a services object
 let services = vcapLocal.services;
@@ -37,8 +32,6 @@ assert(!util.isUndefined(mongodb_services), "App must be bound to databases-for-
 // We now take the first bound MongoDB service and extract it's credentials object
 var credentials = mongodb_services[0].credentials;
 
-console.log("********* credentials.mongodb.certificate.certificate_base64 ************", credentials.connection.mongodb.certificate.certificate_base64);
-
 // We always want to make a validated TLS/SSL connection
 let options = {
     ssl: true,
@@ -46,10 +39,9 @@ let options = {
 
 };
 
-console.log("********", credentials.connection.mongodb.certificate.hasOwnProperty("certificate_base64"));
 // If there is a certificate available, use that, otherwise assume Lets Encrypt certifications.
 if (credentials.connection.mongodb.certificate.hasOwnProperty("certificate_base64")) {
-console.log("******** INSIDE ********");
+console.log("******** INSIDE -certificate_base64 ********");
     let ca = [new Buffer(credentials.connection.mongodb.certificate.certificate_base64, 'base64')];
     options.sslCA = ca;
 	

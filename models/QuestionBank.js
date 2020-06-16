@@ -9,9 +9,6 @@ const QuestionBankSchema = new Schema({
    question: {
       type: String
    },
-   jrss: {
-      type: String
-   },
    technologyStream: {
       type: String
    },
