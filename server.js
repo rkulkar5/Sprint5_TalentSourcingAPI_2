@@ -4,12 +4,13 @@ let express = require('express'),
    cors = require('cors'),
    bodyParser = require('body-parser'),
    dbConfig = require('./database/db');
-
+   
 // Connecting with mongo db
 mongoose.Promise = global.Promise;
 
-// Connecting with mongo db
-mongoose.Promise = global.Promise;
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+
 mongoose.connect(dbConfig.db, dbConfig.options).then(() => {
       console.log('Database sucessfully connected')
    },
@@ -29,20 +30,26 @@ const loginRoute = require('./routes/login.route');
 const resultRoute = require('./routes/userResult.route');
 const projectAllocRoute = require('./routes/projectAlloc.route');
 const preTechFormRoute = require('./routes/preTechForm.route');
+const userroleRoute = require('./routes/userrole.route');
+const reportRoute = require('./routes/report.route');
+const techStreamRoute = require('./routes/techStream.route');
 
 const app = express();
 
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-   extended: false
-}));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({
+//    extended: false
+// }));
+// setting the limit to 1mb cosidering the CV size.
+app.use(bodyParser.json({limit: '1mb'}));
+app.use(bodyParser.urlencoded({limit: '1mb', extended: true}));
 
 
 var whitelist = ['http://localhost:4200','https://tatclientapp.mybluemix.net']
 var corsOptions = {
   origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
+    if (whitelist.indexOf(origin) !== -1) {
       callback(null, true)
     } else {
       callback(new Error('Untrusted source of access!!!'))
@@ -61,7 +68,8 @@ app.use(function(req,res, next){
     else
       return next();
 });
-app.use(cors(corsOptions));
+
+app.use(cors(whitelist));
 
 app.use(express.static(path.join(__dirname, 'dist/mean-stack-crud-app')));
 app.use('/', express.static(path.join(__dirname, 'dist/mean-stack-crud-app')));
@@ -76,7 +84,9 @@ app.use('/result', resultRoute)
 app.use('/projectAlloc', projectAllocRoute)
 
 app.use('/api/preTechForm', preTechFormRoute)
-
+app.use('/api/userrole', userroleRoute)
+app.use('/getReport', reportRoute)
+app.use('/techStream', techStreamRoute)
 
 
 
