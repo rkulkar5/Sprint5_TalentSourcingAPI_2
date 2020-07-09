@@ -6,7 +6,10 @@ const ProjectAllocSchema = new Schema({
    userName: {
       type: String
    },
-    location: {
+   location: {
+      type: String
+   },
+   clientProject: {
       type: String
    },
    projectName : {

@@ -17,8 +17,36 @@ jrssRoute.route('/').get((req, res) => {
   })
 })
 
+
+// Get All Jrss
+jrssRoute.route('/getJrssPreTech/:jrssName').get((req, res) => {  
+  JRSS.aggregate([
+    {$match : { 'jrss':req.params.jrssName }},
+    {$lookup:
+      {   from: "preTechQuestionnaire",
+              localField: "jrss",
+              foreignField: "jrss",
+              as: "jrss_preTech"
+      }
+    },
+    {$sort:
+      {
+        'updatedDate': -1
+      }
+    }],(error,output) => {
+      if (error) {
+        return next(error)
+      } else {
+        res.json(output)
+      }
+    })
+ });
+ 
+
+
 // Read Workflow details by jrssname
 jrssRoute.route('/readJrss/:jrssName').get((req, res) => {
+  console.log("req.params.jrssName="+req.params.jrssName);
   JRSS.findOne({'jrss': req.params.jrssName}, (error, data) => {
     if (error) {
       return next(error)
@@ -85,4 +113,16 @@ jrssRoute.route('/updateWorkflow/:id').put((req, res, next) => {
     }
   })
 })
+
+// Get single candidate
+jrssRoute.route('/readJrssById/:id').get((req, res) => {
+  JRSS.findById(req.params.id, (error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.json(data)
+    }
+  })
+})
+
 module.exports = jrssRoute;

@@ -23,8 +23,7 @@ quizRoute.route('/:userName').get((req, res) => {
      if (error) {
        return next(error)
      } else {
-      res.json(data)
-      console.log('useranswer here',userAnswer,'data here',data)     
+      res.json(data)        
      }
   })
 })

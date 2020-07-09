@@ -36,6 +36,9 @@ let  LoginSchema    = new Schema({
 
     userLoggedin: {
         type: String
+    },
+    name: {
+        type: String
     }
 },{
     collection: 'users'

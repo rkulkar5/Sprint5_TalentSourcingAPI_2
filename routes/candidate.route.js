@@ -159,6 +159,21 @@ candidateRoute.route('/update/:id').put((req, res, next) => {
   })
 })
 
+// Update candidate Resume from Pre-Tech Form
+candidateRoute.route('/updateCandidateResume/:username').put((req, res, next) => {
+  Candidate.updateOne({username: req.params.username}, {
+    $set: req.body
+  }, (error, data) => {
+    if (error) {
+      console.log(error);
+      return next(error);
+    } else {
+      res.json(data)
+      console.log('Data updated successfully')
+    }
+  })
+})
+
 // Update User Details
 candidateRoute.route('/updateUser/:id').put((req, res, next) => {
   User.findByIdAndUpdate(req.params.id, {
