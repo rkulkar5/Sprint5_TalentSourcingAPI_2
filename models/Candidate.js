@@ -6,6 +6,9 @@ let Candidate = new Schema({
    employeeName: {
       type: String
    },
+   employeeType: {
+      type: String
+   },
    email: {
       type: String
    },
@@ -37,6 +40,12 @@ let Candidate = new Schema({
           type: Date
    },
    username: {
+      type: String
+   },
+   resumeName: {
+      type: String
+   },
+   resumeData: {
       type: String
    },
 }, {
