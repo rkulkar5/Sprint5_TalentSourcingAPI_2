@@ -120,7 +120,7 @@ quizRoute.route('/quizDetailsByUser/:userName/:quizId').get((req, res) => {
       Results.aggregate([
        {$match:{ $and: [ {$or:[{stage1_status:'Completed'},{stage1_status:'Skipped'}]},
                          {$or:[{stage2_status:'Completed'},{stage2_status:'Skipped'}]},
-                         {$or:[{$and:[{stage3_status:'Completed'}, {$or:[{smeResult:'Recommended'},{smeResult:'Strongly Recommended'}]},{smeResult: {$exists: true }}]},{stage3_status:'Skipped'}]},
+                         {$or:[{$and:[{stage3_status:'Completed'}, {$or:[{smeResult:'Recommended'},{smeResult:'Strongly Recommended'},{smeResult:'Exceptional Approval Given'}]},{smeResult: {$exists: true }}]},{stage3_status:'Skipped'}]},
                          {stage4_status:'Not Started'}]}},
        {$lookup:
          {   from: "candidate",
@@ -144,13 +144,37 @@ quizRoute.route('/quizDetailsByUser/:userName/:quizId').get((req, res) => {
        });
     })
 
+    	//Get Partner Interview Candidate list
+      quizRoute.route('/getPartnerInterviewAccountList/:account').get((req, res) => {        
+        Results.aggregate([
+        {$match:{ $and: [ {$or:[{stage1_status:'Completed'},{stage1_status:'Skipped'}]},
+                           {$or:[{stage2_status:'Completed'},{stage2_status:'Skipped'}]},
+                           {$or:[{$and:[{stage3_status:'Completed'}, {$or:[{smeResult:'Recommended'},{smeResult:'Strongly Recommended'},{smeResult:'Exceptional Approval Given'}]},{smeResult: {$exists: true }}]},{stage3_status:'Skipped'}]},
+                           {stage4_status:'Not Started'}
+                           ]}},
+        {$lookup: { from: "candidate", 
+                           let: { result_userName: "$userName" }, 
+                           pipeline: [{ $match: { $expr: { $and: [
+                           { $eq: ["$$result_userName", "$username"] }, 
+                           { $eq: ["$account", req.params.account] }] } } }, 
+                           ], as: "result_users" } } ,           
+        {$match: {"result_users.account" :{$exists: true }}}	                         
+                           ],(error, data) => {
+                             if (error) {
+                                return next(error)
+                              } else {
+                                 res.json(data)
+                                }
+                              })
+          })
+
     //Read Partner Interview Candidate Details
     quizRoute.route('/readPartnerInterviewDetails/:userName').get((req, res) => {
       Results.aggregate([
        {$match:{ $and: [ {userName:req.params.userName},
                          {$or:[{stage1_status:'Completed'},{stage1_status:'Skipped'}]},
                          {$or:[{stage2_status:'Completed'},{stage2_status:'Skipped'}]},
-                         {$or:[{$and:[{stage3_status:'Completed'}, {$or:[{smeResult:'Recommended'},{smeResult:'Strongly Recommended'}]},{smeResult: {$exists: true }}]},{stage3_status:'Skipped'}]},
+                         {$or:[{$and:[{stage3_status:'Completed'}, {$or:[{smeResult:'Recommended'},{smeResult:'Strongly Recommended'},{smeResult:'Exceptional Approval Given'}]},{smeResult: {$exists: true }}]},{stage3_status:'Skipped'}]},
                          {stage4_status:'Not Started'}]}},
        {$lookup:
          {   from: "candidate",
@@ -189,6 +213,29 @@ quizRoute.route('/quizDetailsByUser/:userName/:quizId').get((req, res) => {
       }
     })
   });
+//Get Operations Account Candidate list
+quizRoute.route('/getOperationsAccountCandidateList/:account').get((req, res) => {
+  Results.aggregate([
+    {$match:{ $and:[{$or:[{stage1_status:'Completed'},{stage1_status:'Skipped'}]},
+    {$or:[{stage2_status:'Completed'},{stage2_status:'Skipped'}]},
+    {$or:[{stage3_status:'Completed'},{stage3_status:'Skipped'}]},
+    {$or:[{$and:[{stage4_status:'Completed'}, {$or:[{managementResult:'Recommended'},{managementResult:'Exceptional Approval Given'}]},{managementResult: {$exists: true }}]},{stage4_status:'Skipped'}]},
+    {stage5_status:'Not Started'}]}},
+    {$lookup: { from: "candidate", 
+                     let: { result_userName: "$userName" }, 
+                     pipeline: [{ $match: { $expr: { $and: [
+                       { $eq: ["$$result_userName", "$username"] }, 
+                       { $eq: ["$account", req.params.account] }] } } }, 
+                       ], as: "result_users" } } ,           
+    {$match: {"result_users.account" :{$exists: true }}}                           
+                      ],(error, data) => {
+                         if (error) {
+                             return next(error)
+                           } else {
+                             res.json(data)
+                           }
+                         })
+                       })
 
   //Get Operations Candidate list
   quizRoute.route('/getOperationsCandidateList').get((req, res) => {
@@ -196,7 +243,7 @@ quizRoute.route('/quizDetailsByUser/:userName/:quizId').get((req, res) => {
      {$match:{ $and:[{$or:[{stage1_status:'Completed'},{stage1_status:'Skipped'}]},
                    {$or:[{stage2_status:'Completed'},{stage2_status:'Skipped'}]},
                    {$or:[{stage3_status:'Completed'},{stage3_status:'Skipped'}]},
-                   {$or:[{$and:[{stage4_status:'Completed'}, {managementResult:'Recommended'},{managementResult: {$exists: true }}]},{stage4_status:'Skipped'}]},
+                   {$or:[{$and:[{stage4_status:'Completed'}, {$or:[{managementResult:'Recommended'},{managementResult:'Exceptional Approval Given'}]},{managementResult: {$exists: true }}]},{stage4_status:'Skipped'}]},
                    {stage5_status:'Not Started'}]}},
      {$lookup:
        {   from: "candidate",
@@ -227,7 +274,7 @@ quizRoute.route('/quizDetailsByUser/:userName/:quizId').get((req, res) => {
                         {$or:[{stage1_status:'Completed'},{stage1_status:'Skipped'}]},
                         {$or:[{stage2_status:'Completed'},{stage2_status:'Skipped'}]},
                         {$or:[{stage3_status:'Completed'},{stage3_status:'Skipped'}]},
-                        {$or:[{$and:[{stage4_status:'Completed'}, {managementResult:'Recommended'},{managementResult: {$exists: true }}]},{stage4_status:'Skipped'}]},
+                        {$or:[{$and:[{stage4_status:'Completed'}, {$or:[{managementResult:'Recommended'},{managementResult:'Exceptional Approval Given'}]},{managementResult: {$exists: true }}]},{stage4_status:'Skipped'}]},
                         {stage5_status:'Not Started'}]}},
      {$lookup:
        {   from: "candidate",
@@ -293,6 +340,28 @@ quizRoute.route('/quizDetailsByUser/:userName/:quizId').get((req, res) => {
    });
 })
 
+//Get Technical Interview Candidate list
+quizRoute.route('/getTechnicalInterviewAccountList/:account').get((req, res) => {  
+  Results.aggregate([
+    {$match: { $and:[{$or: [{stage1_status:"Completed"},{stage1_status:"Skipped"}]},
+    {$or: [{stage2_status:"Skipped"},{stage2_status:"Completed"}]},
+    {stage3_status:"Not Started"}]}},
+    {$lookup: { from: "candidate", 
+                     let: { result_userName: "$userName" }, 
+                     pipeline: [{ $match: { $expr: { $and: [
+                       { $eq: ["$$result_userName", "$username"] }, 
+                       { $eq: ["$account", req.params.account] }] } } }, 
+                       ], as: "result_users" } } ,           
+    {$match: {"result_users.account" :{$exists: true }}}                           
+                      ],(error, data) => {
+                         if (error) {
+                             return next(error)
+                           } else {
+                             res.json(data)
+                           }
+                         })
+    })  
+
 
 quizRoute.route("/getResultByUser/:userName/:quizNumber").get((req, res,next) => {
   Results.findOne({userName: req.params.userName,quizNumber:req.params.quizNumber}, function(err,results){
@@ -324,7 +393,7 @@ quizRoute.route("/updateResults/:id").put((req, res,next) => {
 quizRoute.route("/updateExceptionalApproval/:id/:quizNumber/:smeFeedback").put((req, res,next) => {
   
   Results.updateOne({userName:req.params.id,quizNumber:req.params.quizNumber}, {
-    $set: {stage3_status:"Skipped",smeFeedback:req.params.smeFeedback,smeName:"",smeAssessmentDate:new Date(),smeResult:"Exceptional Approval Given"}  
+    $set: {stage3_status:"Completed",smeFeedback:req.params.smeFeedback,smeName:"",smeAssessmentDate:new Date(),smeResult:"Exceptional Approval Given"}
     
     }, (error, data) => {
     if (error) {
@@ -438,7 +507,6 @@ quizRoute.route("/updateExceptionalApprovalStage4/:id/:quizNumber").put((req, re
          if (error) {
            return next(error)
          } else {
-           console.log(output);
            res.json(output)
          }
        });
@@ -446,13 +514,12 @@ quizRoute.route("/updateExceptionalApprovalStage4/:id/:quizNumber").put((req, re
 
 
     quizRoute.route('/getCandidateInterviewStatus').get((req, res) => {
-      Results.aggregate([
-        {$match: { $and:[{stage5_status:"Not Started"}]}},
+      Candidate.aggregate([
        {$lookup:
-         {   from: "candidate",
-                 localField: "userName",
-                 foreignField: "username",
-                 as: "result_users"
+         {   from: "results",
+                 localField: "username",
+                 foreignField: "userName",
+                 as: "candidate_results"
          }
        },
        {$sort:
@@ -465,11 +532,64 @@ quizRoute.route("/updateExceptionalApprovalStage4/:id/:quizNumber").put((req, re
          if (error) {
            return next(error)
          } else {
-           console.log(output);
            res.json(output)
          }
        });
     })
 
+     quizRoute.route('/viewCandidateInterviewStatus/:id').get((req, res) => {
+          Candidate.aggregate([
+           {$match: { _id: ObjectId(req.params.id)}},
+           {$lookup:
+             {   from: "results",
+                     localField: "username",
+                     foreignField: "userName",
+                     as: "candidate_results"
+             }
+           },
+           {$sort:
+             {
+               'updatedDate': -1
+             },
+
+           }],
+           (error,output) => {
+             if (error) {
+               return next(error)
+             } else {
+               console.log(output);
+               res.json(output)
+             }
+           });
+        })
+
+        quizRoute.route("/updateResult/:id/:userName").put((req, res,next) => {
+          Results.updateOne({_id:req.params.id,userName:req.params.userName}, {
+             $set: {userName:req.body.userName,quizNumber:req.body.quizNumber,userScore:req.body.userScore,
+                    stage1_status:req.body.stage1_status,stage2_status:req.body.stage2_status,stage3_status:req.body.stage3_status,smeResult:req.body.smeResult,
+                    stage4_status:req.body.stage4_status,managementResult:req.body.managementResult,stage5_status:req.body.stage5_status}
+            }, (error, data) => {
+            if (error) {
+              console.log(error);
+              return next(error);
+            } else {
+              res.json(data)
+              console.log(data);
+              console.log('Data updated successfully')
+            }
+          })
+        })
+
+    // Get single candidate
+    quizRoute.route('/readResult/:id').get((req, res) => {
+      Results.findById(req.params.id,(error, data) => {
+        if (error) {
+          return next(error)
+        } else {
+          res.json(data);
+          console.log(data);
+        }
+      })
+    })
 
 module.exports = quizRoute;

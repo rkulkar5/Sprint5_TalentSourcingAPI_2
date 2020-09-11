@@ -11,12 +11,13 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "cfenv": "^1.2.2",
+    "cfenv": "^1.2.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jquery": "^3.5.1",
-    "mongoose": "^5.9.19",
+    "mongoose": "^5.10.4",
     "ngx-pagination": "^5.0.0",
+    "nodemailer": "^6.4.10",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "popper.js": "^1.16.1"

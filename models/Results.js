@@ -9,6 +9,9 @@ const ResultsSchema = new Schema({
    userScore: {
       type: Number
    },
+   userResult: {
+      type: String
+   },
    quizNumber : {
       type: Number
    },

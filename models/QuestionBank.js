@@ -12,13 +12,16 @@ const QuestionBankSchema = new Schema({
    technologyStream: {
       type: String
    },
-   skill: {
+   complexityLevel: {
          type: String
    },
    questionType: {
       type: String
    },
    answerID: {
+      type: String
+   },
+   account: {
       type: String
    },
    options: [{

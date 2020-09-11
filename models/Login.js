@@ -39,6 +39,9 @@ let  LoginSchema    = new Schema({
     },
     name: {
         type: String
+    },
+    account: {
+        type: String
     }
 },{
     collection: 'users'

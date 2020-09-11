@@ -12,9 +12,6 @@ const ProjectAllocSchema = new Schema({
    clientProject: {
       type: String
    },
-   projectName : {
-      type: String
-   },
    position: {
       type: String
    },

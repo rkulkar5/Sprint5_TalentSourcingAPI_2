@@ -2,15 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // Define collection and schema
-let Band = new Schema({
+let LOBSchema = new Schema({
    lob: {
-        type: String
-   },
-   band: {
          type: String
    }
 }, {
-   collection: 'bands'
+   collection: 'lobs'
 })
 
-module.exports = mongoose.model('Band', Band)
+module.exports = mongoose.model('lobs', LOBSchema)

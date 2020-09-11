@@ -48,6 +48,24 @@ let Candidate = new Schema({
    resumeData: {
       type: String
    },
+   account: {
+      type: String
+   },
+   userLOB: {
+      type: String
+   },
+   grossProfit: {
+     type: String
+   },
+   userPositionLocation: {
+         type: String
+   },
+   openPositionName: {
+        type: String
+   },
+   positionID: {
+      type: String
+ }
 }, {
    collection: 'candidate'
 })

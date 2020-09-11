@@ -20,11 +20,60 @@ quizRoute.route('/createQuiz').post((req, res, next) => {
   })
 });
 
+// Get single QuestionBank
+quizRoute.route('/read/:rowNum').get((req, res, next) => {
+  QuestionBank.findById(req.params.rowNum,(error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.json(data)
+    }
+  })  
+})
+
+// View QuestionBank
+quizRoute.route('/:userName/:account').get((req, res) => {
+  console.log("inside reading questions");
+  let account = req.params.account;
+  if(account !== 'sector'){
+  QuestionBank.aggregate([{$match : {account: account}},
+   {
+     $lookup:
+       {
+         from: "users",
+         localField: "account",
+         foreignField: "account",
+         as: "Questions"
+       }
+  }
+],(error, data) => {
+      if (error) {
+          return next(error)
+        } else {
+          res.json(data)
+        }
+      })
+    }
+    else if(account === 'sector'){
+      QuestionBank.find((error, data) => {
+          if (error) {
+            return next(error)
+          } else {
+            res.json(data)
+          }
+        })
+    }
+  
+});
+
+
 // Get different set of questions based on the username supplied
-quizRoute.route('/:noOfQuestions/:userName/:technologyStream').get((req, res) => {
+ quizRoute.route('/:noOfQuestions/:userName/:technologyStream/:complexityLevel').get((req, res) => {
   var techStreamArray = req.params.technologyStream.split(',');
+  var complexityLevel = req.params.complexityLevel;
   QuestionBank.aggregate( 
  [{$match : {technologyStream: {$in:techStreamArray}}},
+  {$match : {complexityLevel: complexityLevel}},
   {$lookup: 
     {   from: "userAnswer",
      let: {  qb_qid: "$questionID"},
@@ -54,9 +103,26 @@ quizRoute.route('/:noOfQuestions/:userName/:technologyStream').get((req, res) =>
       return next(error)
     } else {
       res.json(data)
+      
     }
   })
 })
+
+//Get question complexity
+quizRoute.route('/:technologyStream').get((req,res) => {
+  QuestionBank.aggregate([{ $lookup: { from: "Candidate", 
+  let: { qb_ts: "$technologyStream" }, 
+  pipeline: [{ $match: { $expr: { $and: [
+    { $eq: ["$$qb_ts", "$technologyStream"] }]}}}, 
+    { $project: { complexityLevel: 1} }], as: "complexity" } }],(error, data) => {
+      if (error) {
+          return next(error)
+        } else {
+          res.json(data)
+        }
+      })
+  })
+
 
 // Get pretechnical questions based on jrss
 quizRoute.route('/getPreTechQuestionanire/:jrss/:userName').get((req, res) => {
@@ -74,17 +140,20 @@ quizRoute.route('/getPreTechQuestionanire/:jrss/:userName').get((req, res) => {
       })
     })
 
-// Get single QuestionBank
-quizRoute.route('/read/:rowNum').get((req, res) => {
-  QuestionBank.find((error, data) => {
-    if (error) {
-      return next(error)
-    } else {
-      res.json(data)
-    }
-  }).skip(Number(req.params.rowNum-1)).limit(1);
-  
+//Check for questions per technology stream
+quizRoute.route('/Count/Questions/:technologyStream').get((req, res) => {
+  QuestionBank.count({'technologyStream': req.params.technologyStream }, (error, data) => {
+  if (error) {
+    return next(error)
+  } else {
+    console.log ('count for techStream '+req.params.technologyStream+' is '+ data);
+    res.json({ count : data });
+  }
 })
+})
+
+
+
 
 /**
 // Update QuestionBank
@@ -101,11 +170,30 @@ quizRoute.route('/update/:id').put((req, res, next) => {
     }
   })
 })
+**/
+
+// Update QuestionBank
+quizRoute.route('/updatequestion/:id').put((req, res, next) => {  
+  QuestionBank.findByIdAndUpdate(req.params.id, {
+    $set: req.body
+  }, (error, data) => {
+    if (error) {
+      return next(error);
+      console.log(error)
+    } else {
+      res.json(data)
+      console.log('Data updated successfully')
+    }
+  })
+})
+
+
+
 
 // Delete QuestionBank
 quizRoute.route('/delete/:id').delete((req, res, next) => {
-  QuestionBank.findOneAndRemove(req.params.id, (error, data) => {
-    if (error) {
+  QuestionBank.findByIdAndDelete(req.params.id, (error, data) => {
+  if (error) {
       return next(error);
     } else {
       res.status(200).json({
@@ -114,5 +202,5 @@ quizRoute.route('/delete/:id').delete((req, res, next) => {
     }
   })
 })
-**/
+
 module.exports = quizRoute;

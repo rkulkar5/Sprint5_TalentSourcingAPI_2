@@ -38,6 +38,17 @@ bandRoute.route('/readBand/:id').get((req, res) => {
   })
 })
 
+// Get bands by lob
+bandRoute.route('/readBandsByLOB/:lob').get((req, res) => {
+  Band.find({lob: req.params.lob}, (error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.json(data)
+    }
+  })
+})
+
 
 // Update band
 bandRoute.route('/updateBand/:id').put((req, res, next) => {

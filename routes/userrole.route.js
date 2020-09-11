@@ -52,7 +52,28 @@ userroleRoute.route('/deleteUser/:username').delete((req, res, next) => {
   })
 })
 
+// Get the list of users who has role: sme or partner or management
+userroleRoute.route('/findAllAdminUser').get((req, res) => {
+  console.log('userroleRoute.findUser invoked');
+  User.aggregate([
+    {$match: {
+             $or:[{accessLevel:'admin'},{account:'SECTOR'}]}
+    },
+    
+    {$sort:
+      {
+        'username': -1
+      },
 
+    }],
+    (error,output) => {
+      if (error) {
+        return next(error)
+      } else {
+        res.json(output)
+      }
+    });
+})
 
     // Get the list of users who has role: sme or partner or management
     userroleRoute.route('/findAllUser').get((req, res) => {

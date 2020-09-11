@@ -47,7 +47,6 @@ preTechAssessmentRoute.route('/getPreTechQuestionanire/:jrss/:userName').get((re
  preTechAssessmentRoute.route('/saveOrSubmit').put((req, res, next) => {
  
 	 req.body.forEach((answer) => {
-		//console.log("*********8req body *******",answer);
 		  PreTechAssessmentAnswer.findOneAndUpdate(
 			{userName:answer.userName,preTechQID: answer.preTechQID}, 
 			{ $set:{preTechQID:answer.preTechQID,userName:answer.userName,answer:answer.answer,status:answer.status, createdDate:new Date() }},

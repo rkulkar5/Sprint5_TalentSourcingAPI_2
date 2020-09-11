@@ -32,6 +32,19 @@ loginRoute.route('/readUser/:id/:pwd').get((req, res,next) => {
     })
   });
 
+  loginRoute.route('/readUserByAccessLevel/:accessLevel').get((req, res,next) => {
+    User.find({accessLevel: req.params.accessLevel}, function(err,user){
+        if(err){
+          console.log(err);
+          return res.status(500).send('');
+        }
+        if(!user){
+          return res.status(404).send();
+        }
+        return res.json(user);
+      })
+    });
+
   
 loginRoute.route('/getUserDOJ/:id/:doj').get((req, res,next) => {
   var Dateof=new Date(req.params.doj);
@@ -115,5 +128,19 @@ loginRoute.route('/:username/:userloggedin').put((req, res, next) => {
         }
       })
     })
+  
+        // Get Users table records based on role (accessLevel)
+loginRoute.route('/getUserByRole/:id').get((req, res,next) => {
+  User.find({accessLevel: req.params.id},{username: 1}, function(err,user){
+      if(err){
+        console.log(err);
+        return res.status(500).send('');
+      }
+      if(!user){
+        return res.status(404).send();
+      }
+      return res.json(user);
+    })
+  });
   
 module.exports = loginRoute;
