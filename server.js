@@ -11,7 +11,10 @@ mongoose.Promise = global.Promise;
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 
-mongoose.connect(dbConfig.db, dbConfig.options).then(() => {
+mongoose.connect(dbConfig.db, {
+   useNewUrlParser: true,
+   useFindAndModify: false
+}).then(() => {
       console.log('Database sucessfully connected')
    },
    error => {
@@ -33,6 +36,14 @@ const preTechFormRoute = require('./routes/preTechForm.route');
 const userroleRoute = require('./routes/userrole.route');
 const reportRoute = require('./routes/report.route');
 const techStreamRoute = require('./routes/techStream.route');
+const sendEmailRoute = require('./routes/sendEmail.route');
+const openPositionRoute = require('./routes/openPosition.route');
+const competencyLevelRoute = require('./routes/competencyLevel.route');
+const lobRoute = require('./routes/lob.route');
+const positionLocationRoute = require('./routes/positionLocation.route');
+const rateCardJobRoleRoute = require('./routes/rateCardJobRole.route');
+const accountRoute = require('./routes/account.route');
+const meetingEventsRoute = require('./routes/meetingEvents.route');
 
 const app = express();
 
@@ -44,7 +55,6 @@ const app = express();
 // setting the limit to 1mb cosidering the CV size.
 app.use(bodyParser.json({limit: '1mb'}));
 app.use(bodyParser.urlencoded({limit: '1mb', extended: true}));
-
 
 var whitelist = ['http://localhost:4200','https://tatclientapp.mybluemix.net']
 var corsOptions = {
@@ -87,8 +97,15 @@ app.use('/api/preTechForm', preTechFormRoute)
 app.use('/api/userrole', userroleRoute)
 app.use('/getReport', reportRoute)
 app.use('/techStream', techStreamRoute)
+app.use('/sendEmail', sendEmailRoute)
+app.use('/openPosition', openPositionRoute)
+app.use('/competencyLevel', competencyLevelRoute)
+app.use('/lob', lobRoute)
+app.use('/positionLocation', positionLocationRoute)
+app.use('/rateCardJobRole', rateCardJobRoleRoute)
+app.use('/api/account', accountRoute);
 
-
+app.use('/scheduleMeeting', meetingEventsRoute)
 
 // Create port
 const port = process.env.PORT || 4000;
