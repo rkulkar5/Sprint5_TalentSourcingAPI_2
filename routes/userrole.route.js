@@ -79,8 +79,8 @@ userroleRoute.route('/findAllAdminUser').get((req, res) => {
     userroleRoute.route('/findAllUser').get((req, res) => {
       console.log('userroleRoute.findUser invoked');
       User.aggregate([
-        {$match: {
-                 $or:[{accessLevel:'sme'},{accessLevel:'partner'},{accessLevel:'management'}]}
+        {$match: { $and: [{$or:[{accessLevel:'sme'},{accessLevel:'partner'},{accessLevel:'management'}]},
+                         {account:{$ne:'SECTOR'}}]}
         },
         
         {$sort:

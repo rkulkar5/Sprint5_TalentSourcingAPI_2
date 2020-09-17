@@ -35,18 +35,10 @@ quizRoute.route('/read/:rowNum').get((req, res, next) => {
 quizRoute.route('/:userName/:account').get((req, res) => {
   console.log("inside reading questions");
   let account = req.params.account;
-  if(account !== 'sector'){
-  QuestionBank.aggregate([{$match : {account: account}},
-   {
-     $lookup:
-       {
-         from: "users",
-         localField: "account",
-         foreignField: "account",
-         as: "Questions"
-       }
-  }
-],(error, data) => {
+  if(account !== 'SECTOR'){
+  QuestionBank.find({account: {$regex:account}},
+   
+(error, data) => {
       if (error) {
           return next(error)
         } else {
@@ -54,7 +46,7 @@ quizRoute.route('/:userName/:account').get((req, res) => {
         }
       })
     }
-    else if(account === 'sector'){
+    else if(account === 'SECTOR'){
       QuestionBank.find((error, data) => {
           if (error) {
             return next(error)
@@ -68,11 +60,14 @@ quizRoute.route('/:userName/:account').get((req, res) => {
 
 
 // Get different set of questions based on the username supplied
- quizRoute.route('/:noOfQuestions/:userName/:technologyStream/:complexityLevel').get((req, res) => {
+ quizRoute.route('/:noOfQuestions/:userName/:technologyStream/:complexityLevel/:account').get((req, res) => {
   var techStreamArray = req.params.technologyStream.split(',');
   var complexityLevel = req.params.complexityLevel;
+  var account = req.params.account;
   QuestionBank.aggregate( 
- [{$match : {technologyStream: {$in:techStreamArray}}},
+ [
+  {$match : {account: account}},
+  {$match : {technologyStream: {$in:techStreamArray}}},
   {$match : {complexityLevel: complexityLevel}},
   {$lookup: 
     {   from: "userAnswer",

@@ -18,6 +18,17 @@ accountRoute.route('/').get((req, res) => {
   })
 })
 
+// Add account
+accountRoute.route('/createAccount').post((req, res, next) => {
+  Account.create(req.body, (error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.json(data)
+    }
+  })
+})
+
 
 
 

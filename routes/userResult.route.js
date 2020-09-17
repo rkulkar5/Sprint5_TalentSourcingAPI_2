@@ -24,20 +24,18 @@ console.log("Inside the save results route", req.body);
 });
 
 //Get All Candidates
-quizRoute.route('/getresult').get((req, res) => {
+quizRoute.route('/getresult/:account').get((req, res) => {
+  let accountArray = req.params.account.split(",");
   Results.aggregate([
-   {$lookup:
-     {   from: "candidate",
-             localField: "userName",
-             foreignField: "username",
-             as: "result_users"
-     }
-   },
-   {$sort:
-     {
-       'updatedDate': -1
-     },
-
+   {$lookup: { from: "candidate",
+                let: { result_userName: "$userName" },
+                pipeline: [
+                {$match: { $expr:
+                { $and: [{ $eq: ["$$result_userName", "$username"] },
+                { $in: ["$account", accountArray] }] } } },
+                ], as: "result_users" } } ,
+   {$match: {"result_users.account" :{$exists: true }}}  ,
+   {$sort: {'updatedDate': -1},
    }],
    (error,output) => {
      if (error) {

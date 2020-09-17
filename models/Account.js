@@ -3,8 +3,10 @@ const Schema = mongoose.Schema;
 
 // Define collection and schema
 let Account = new Schema({
-   account: {
-         type: String
+   account: { 
+      type : String , 
+      unique : true, 
+      required : true
    }
 }, {
    collection: 'accounts'

@@ -125,4 +125,15 @@ jrssRoute.route('/readJrssById/:id').get((req, res) => {
   })
 })
 
+// Read Jrss by account
+jrssRoute.route('/getJrsssByAccount/:account').get((req, res) => {
+  JRSS.find({'account': req.params.account}, (error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.json(data)
+    }
+  })
+})
+
 module.exports = jrssRoute;

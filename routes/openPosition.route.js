@@ -141,10 +141,9 @@ openPositionRoute.route('/readCostCardsByCostCardCode/:name').get((req, res) => 
 
 // List All Open Positions
 openPositionRoute.route('/listOpenPositions/:account/:status').get((req, res) => {
-console.log('acount***** ',req.params.account);
+    let accountArray = req.params.account.split(",");
 	if(req.params.account.toLowerCase().indexOf("sector") === -1) {
-	console.log('Inside if***** ');
-		  OpenPosition.find({'account': req.params.account, 'status': req.params.status},(error, data) => {
+		  OpenPosition.find({'account': {$in:accountArray}, 'status': req.params.status},(error, data) => {
 			if (error) {
 			  return next(error)
 			} else {
@@ -153,12 +152,11 @@ console.log('acount***** ',req.params.account);
 			}
 		  })
 	} else {
-	console.log('Inside Else***** ');
 			OpenPosition.find({'status': req.params.status},(error, data) => {
 			if (error) {
 			  return next(error)
 			} else {
-			 console.log('*****data******', data);
+			  console.log('*****data******', data);
 			  res.json(data)
 			}
 			})

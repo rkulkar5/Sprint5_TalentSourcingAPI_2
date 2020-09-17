@@ -6,7 +6,9 @@ let JRSS = new Schema({
    jrss: {
          type: String
    },
-
+account: {
+         type: String
+   },
    technologyStream: [
       {key:String,value:String},
    ],
