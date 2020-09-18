@@ -6,6 +6,9 @@ let TestConfig = new Schema({
    JRSS: {
          type: String
    },
+   account: {
+         type: String
+   },
    noOfQuestions: {
          type: Number
    },

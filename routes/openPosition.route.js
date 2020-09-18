@@ -40,6 +40,18 @@ openPositionRoute.route('/readLatestPositionID').get((req, res) => {
   }).sort({"positionID":-1}).limit(1);
 })
 
+// Get the latest sequenceID - Get the count of records and then later increment one.
+openPositionRoute.route('/readLatestSequenceID').get((req, res) => {
+  OpenPosition.find((error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.json(data)
+	  
+    }
+  }).sort({"sequenceID":-1}).limit(1);
+})
+
 // List All Open Positions by Job Role
 openPositionRoute.route('/listAllOpenPositionsByJRSS/:account/:status/:JRSS').get((req, res) => {
 console.log('JRSS***** ',req.params.JRSS);

@@ -9,6 +9,9 @@ let OpenPositionSchema = new Schema({
    positionID: {
       type: String
    },
+   sequenceID: {
+      type: String
+   },
    JRSS: {
       type: String
    },
