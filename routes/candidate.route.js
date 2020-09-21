@@ -109,6 +109,36 @@ candidateRoute.route('/').get((req, res) => {
     });
 })
 
+
+
+// Get All Candidates for specific accounts
+candidateRoute.route('/readCandidates/:account').get((req, res) => {
+  let accountArray = req.params.account.split(",");
+  console.log('*****req.params.account******', req.params.account);
+  Candidate.aggregate([
+    {$match : { 'account': {$in:accountArray} }},
+    {$lookup:
+      {   from: "users",
+              localField: "username",
+              foreignField: "username",
+              as: "candidate_users"
+      }
+    },
+    {$sort:
+      {
+        'updatedDate': -1
+      }
+    }],(error,output) => {
+      if (error) {
+        return next(error)
+      } else {
+        res.json(output)
+      }
+    })
+
+})
+
+
 // Get single candidate
 candidateRoute.route('/read/:id').get((req, res) => {
   Candidate.findById(req.params.id, (error, data) => {

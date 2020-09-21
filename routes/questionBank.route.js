@@ -63,12 +63,20 @@ quizRoute.route('/:userName/:account').get((req, res) => {
  quizRoute.route('/:noOfQuestions/:userName/:technologyStream/:complexityLevel/:account').get((req, res) => {
   var techStreamArray = req.params.technologyStream.split(',');
   var complexityLevel = req.params.complexityLevel;
-  var account = req.params.account;
+  var account = req.params.account; 
   QuestionBank.aggregate( 
  [
-  {$match : {account: account}},
   {$match : {technologyStream: {$in:techStreamArray}}},
-  {$match : {complexityLevel: complexityLevel}},
+  {$match : {complexityLevel: complexityLevel}}, 
+  {$match : { $or: [
+                    {account: account},
+                    {account: {$regex: "," + account + "$"}},
+                    {account: {$regex: "^" + account + ","}},
+                    {account: {$regex: "," + account + ","}}, 
+                    {account: {$regex: "sector", $options: 'i'}}
+                   ] 
+            } 
+  },  
   {$lookup: 
     {   from: "userAnswer",
      let: {  qb_qid: "$questionID"},
