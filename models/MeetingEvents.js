@@ -21,6 +21,9 @@ let MeetingEvents = new Schema({
    },
    candidateEmail: {
       type: String
+   },
+   user: {
+      type: String
    }
 }, {
    collection: 'meetingEvents'

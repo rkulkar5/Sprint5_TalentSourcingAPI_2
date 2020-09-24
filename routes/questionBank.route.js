@@ -20,6 +20,17 @@ quizRoute.route('/createQuiz').post((req, res, next) => {
   })
 });
 
+// Get All Qyestions
+quizRoute.route('/').get((req, res) => {
+  QuestionBank.find((error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.json(data)
+    }
+  })
+})
+
 // Get single QuestionBank
 quizRoute.route('/read/:rowNum').get((req, res, next) => {
   QuestionBank.findById(req.params.rowNum,(error, data) => {

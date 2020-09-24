@@ -86,6 +86,17 @@ openPositionRoute.route('/readOpenPosition/:id').get((req, res) => {
   })
 })
 
+// Get single open position
+openPositionRoute.route('/readOpenPositionByPositionID/:positionID').get((req, res) => {
+  OpenPosition.findOne({'positionID': req.params.positionID}, (error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.json(data)
+    }
+  })
+})
+
 // get open position by position name
 openPositionRoute.route('/readOpenPositionByPositionName/:name').get((req, res, next) => {
   OpenPosition.findOne({'positionName': req.params.name}, (error, data) => {

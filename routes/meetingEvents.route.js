@@ -38,8 +38,8 @@ appointmentRoute.route('/updateMeetingEventsByEventID/:eventID/:candidateEmail')
 
 
 // get MeetingEvents by candidate email 
-appointmentRoute.route('/getMeetingEventsByCandidate/:candidateEmail').get((req, res, next) => {
-  MeetingEvents.find({'candidateEmail': req.params.candidateEmail}, (error, data) => {
+appointmentRoute.route('/getMeetingEventsByLoggedinUser/:loggedinUser').get((req, res, next) => {
+  MeetingEvents.find({'user': req.params.loggedinUser}, (error, data) => {
     if (error) {
       return next(error)
     } else {
