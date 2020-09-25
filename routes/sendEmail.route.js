@@ -13,7 +13,7 @@ sendEmailRoute.route('/sendEmail').post((req, res, next) => {
       }); 
 
       let mailDetails = { 
-        from: "DWP Talent Sourcing<" + req.body.from + ">", 
+        from: "Talent Sourcing Tool<" + req.body.from + ">", 
         to: req.body.to, 
         subject: req.body.subject,
         html: req.body.message
@@ -21,10 +21,10 @@ sendEmailRoute.route('/sendEmail').post((req, res, next) => {
 
       mailTransporter.sendMail(mailDetails, function(err, data) {   
         if(err) { 
-          console.log('Error occurred while sending the email - ' + err.response); 
+          console.log('[Send Email] - Error occurred while sending the email - ' + err.response); 
           response = {err};          
         } else { 
-          console.log('Email sent successfully = ' + data.response); 
+          console.log('[Send Email] - Email sent successfully = ' + data.response); 
           response = {data};            
         } 
       });        
