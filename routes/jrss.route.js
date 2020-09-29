@@ -136,4 +136,28 @@ jrssRoute.route('/getJrsssByAccount/:account').get((req, res) => {
   })
 })
 
+// Get All Jrss
+jrssRoute.route('/getJRSSPreTechByAccountAndJrssName/:jrssName/:account').get((req, res) => {
+  JRSS.aggregate([
+    {$match : { 'jrss':req.params.jrssName,'account':req.params.account }},
+    {$lookup:
+      {   from: "preTechQuestionnaire",
+              localField: "jrss",
+              foreignField: "jrss",
+              as: "jrss_preTech"
+      }
+    },
+    {$sort:
+      {
+        'updatedDate': -1
+      }
+    }],(error,output) => {
+      if (error) {
+        return next(error)
+      } else {
+        res.json(output)
+      }
+    })
+ });
+
 module.exports = jrssRoute;

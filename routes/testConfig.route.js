@@ -39,9 +39,9 @@ testConfigRoute.route('/readTestConfig/:id').get((req, res) => {
 })
 
 // Get Test Configuration table based on JRSS
-testConfigRoute.route('/findTestConfigByJRSS/:id').get((req, res,next) => {
+testConfigRoute.route('/findTestConfigByJRSS/:id/:account').get((req, res,next) => {
   console.log("in db",req.params.id)
-  TestConfig.findOne({JRSS: req.params.id}, function(err,testConfig){
+  TestConfig.findOne({JRSS: req.params.id,account:req.params.account}, function(err,testConfig){
       if(err){
         console.log(err);
         return res.status(500).send('');

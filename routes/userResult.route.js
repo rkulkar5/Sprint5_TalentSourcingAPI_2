@@ -143,7 +143,8 @@ quizRoute.route('/quizDetailsByUser/:userName/:quizId').get((req, res) => {
     })
 
     	//Get Partner Interview Candidate list
-      quizRoute.route('/getPartnerInterviewAccountList/:account').get((req, res) => {        
+      quizRoute.route('/getPartnerInterviewAccountList/:account').get((req, res) => {
+        let accountArray = req.params.account.split(",");
         Results.aggregate([
         {$match:{ $and: [ {$or:[{stage1_status:'Completed'},{stage1_status:'Skipped'}]},
                            {$or:[{stage2_status:'Completed'},{stage2_status:'Skipped'}]},
@@ -154,7 +155,7 @@ quizRoute.route('/quizDetailsByUser/:userName/:quizId').get((req, res) => {
                            let: { result_userName: "$userName" }, 
                            pipeline: [{ $match: { $expr: { $and: [
                            { $eq: ["$$result_userName", "$username"] }, 
-                           { $eq: ["$account", req.params.account] }] } } }, 
+                           { $in: ["$account", accountArray] }] } } },
                            ], as: "result_users" } } ,           
         {$match: {"result_users.account" :{$exists: true }}}	                         
                            ],(error, data) => {
@@ -213,6 +214,7 @@ quizRoute.route('/quizDetailsByUser/:userName/:quizId').get((req, res) => {
   });
 //Get Operations Account Candidate list
 quizRoute.route('/getOperationsAccountCandidateList/:account').get((req, res) => {
+  let accountArray = req.params.account.split(",");
   Results.aggregate([
     {$match:{ $and:[{$or:[{stage1_status:'Completed'},{stage1_status:'Skipped'}]},
     {$or:[{stage2_status:'Completed'},{stage2_status:'Skipped'}]},
@@ -223,7 +225,7 @@ quizRoute.route('/getOperationsAccountCandidateList/:account').get((req, res) =>
                      let: { result_userName: "$userName" }, 
                      pipeline: [{ $match: { $expr: { $and: [
                        { $eq: ["$$result_userName", "$username"] }, 
-                       { $eq: ["$account", req.params.account] }] } } }, 
+                       { $in: ["$account", accountArray] }] } } },
                        ], as: "result_users" } } ,           
     {$match: {"result_users.account" :{$exists: true }}}                           
                       ],(error, data) => {
@@ -339,7 +341,8 @@ quizRoute.route('/getOperationsAccountCandidateList/:account').get((req, res) =>
 })
 
 //Get Technical Interview Candidate list
-quizRoute.route('/getTechnicalInterviewAccountList/:account').get((req, res) => {  
+quizRoute.route('/getTechnicalInterviewAccountList/:account').get((req, res) => {
+  let accountArray = req.params.account.split(",");
   Results.aggregate([
     {$match: { $and:[{$or: [{stage1_status:"Completed"},{stage1_status:"Skipped"}]},
     {$or: [{stage2_status:"Skipped"},{stage2_status:"Completed"}]},
@@ -348,7 +351,7 @@ quizRoute.route('/getTechnicalInterviewAccountList/:account').get((req, res) => 
                      let: { result_userName: "$userName" }, 
                      pipeline: [{ $match: { $expr: { $and: [
                        { $eq: ["$$result_userName", "$username"] }, 
-                       { $eq: ["$account", req.params.account] }] } } }, 
+                       { $in: ["$account", accountArray] }] } } },
                        ], as: "result_users" } } ,           
     {$match: {"result_users.account" :{$exists: true }}}                           
                       ],(error, data) => {
@@ -511,8 +514,10 @@ quizRoute.route("/updateExceptionalApprovalStage4/:id/:quizNumber").put((req, re
     })
 
 
-    quizRoute.route('/getCandidateInterviewStatus').get((req, res) => {
+    quizRoute.route('/getCandidateInterviewStatus/:acct').get((req, res) => {
+      let accountArray = req.params.acct.split(",");
       Candidate.aggregate([
+       {$match : { 'account': {$in:accountArray} }},
        {$lookup:
          {   from: "results",
                  localField: "username",
@@ -586,6 +591,18 @@ quizRoute.route("/updateExceptionalApprovalStage4/:id/:quizNumber").put((req, re
         } else {
           res.json(data);
           console.log(data);
+        }
+      })
+    })
+
+    // Check if Username Exists
+    quizRoute.route('/findResult/:email/:quizNumber').get((req, res) => {
+      Results.count({'userName': req.params.email,'quizNumber': req.params.quizNumber}, (error, data) => {
+        if (error) {
+          return next(error)
+        } else {
+          console.log ('Count for result record '+req.params.email+' and quizNumber'+req.params.quizNumber+' is '+ data);
+          res.json({ count : data });
         }
       })
     })

@@ -10,7 +10,7 @@ let OpenPositionSchema = new Schema({
       type: String
    },
    sequenceID: {
-      type: String
+      type: Number
    },
    JRSS: {
       type: String
