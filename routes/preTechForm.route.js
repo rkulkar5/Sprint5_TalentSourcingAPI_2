@@ -32,7 +32,7 @@ preTechAssessmentRoute.route('/getPreTechQuestionanire/:jrss/:userName').get((re
   pipeline: [{ $match: { $expr: { $and: [
     { $eq: ["$$qid", "$preTechQID"] }, 
     { $eq: ["$userName", req.params.userName] }] } } }, 
-    { $project: {_id:0,  answer: 1, status:1 } }], as: "PreTechAnswers" } }],(error, data) => {
+    { $project: {_id:0,  answer: 1 } }], as: "PreTechAnswers" } }],(error, data) => {
       if (error) {
           return next(error)
         } else {

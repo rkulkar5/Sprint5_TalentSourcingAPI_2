@@ -53,6 +53,17 @@ testConfigRoute.route('/findTestConfigByJRSS/:id/:account').get((req, res,next) 
     })
   });
 
+// Get test config table JRSS based on account
+  testConfigRoute.route('/findTestConfigJRSSByAccount/:account').get((req, res) => {
+    TestConfig.find({'account': req.params.account}, (error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.json(data)
+    }
+  })
+})
+
 
 // Update Test Configuration
 testConfigRoute.route('/updateTestConfig/:id').put((req, res, next) => {
