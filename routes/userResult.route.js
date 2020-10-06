@@ -607,4 +607,17 @@ quizRoute.route("/updateExceptionalApprovalStage4/:id/:quizNumber").put((req, re
       })
     })
 
+    // Get UserAnswer
+    quizRoute.route('/findUserAnswer/:questionID').get((req, res) => {
+      UserAnswer.count({'questionID': req.params.questionID}, (error, data) => {
+        if (error) {
+         console.log (error);
+          return next(error)
+        } else {
+          console.log ('Count for user answer record '+req.params.questionID+' is '+ data);
+          res.json({ count : data });
+        }
+      })
+    })
+
 module.exports = quizRoute;

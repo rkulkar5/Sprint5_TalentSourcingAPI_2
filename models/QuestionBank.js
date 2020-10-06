@@ -24,6 +24,9 @@ const QuestionBankSchema = new Schema({
    account: {
       type: String
    },
+   status: {
+      type: String
+   },
    options: [{
       optionID:Number,option:String},
       {optionID:Number,option:String},

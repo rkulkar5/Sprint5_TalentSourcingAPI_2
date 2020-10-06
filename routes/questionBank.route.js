@@ -42,34 +42,6 @@ quizRoute.route('/read/:rowNum').get((req, res, next) => {
   })  
 })
 
-// View QuestionBank
-quizRoute.route('/:userName/:account').get((req, res) => {
-  console.log("inside reading questions");
-  let account = req.params.account;
-  if(account !== 'SECTOR'){
-  QuestionBank.find({account: {$regex:account}},
-   
-(error, data) => {
-      if (error) {
-          return next(error)
-        } else {
-          res.json(data)
-        }
-      })
-    }
-    else if(account === 'SECTOR'){
-      QuestionBank.find((error, data) => {
-          if (error) {
-            return next(error)
-          } else {
-            res.json(data)
-          }
-        })
-    }
-  
-});
-
-
 // Get different set of questions based on the username supplied
  quizRoute.route('/:noOfQuestions/:userName/:technologyStream/:complexityLevel/:account').get((req, res) => {
   var techStreamArray = req.params.technologyStream.split(',');
@@ -204,17 +176,29 @@ quizRoute.route('/updatequestion/:id').put((req, res, next) => {
 
 
 
-// Delete QuestionBank
-quizRoute.route('/delete/:id').delete((req, res, next) => {
-  QuestionBank.findByIdAndDelete(req.params.id, (error, data) => {
-  if (error) {
+// Delete QuestionBank - Soft Delete Updating Status='Inactive'
+quizRoute.route('/updateQuestionStatus/:id').put((req, res, next) => {
+  QuestionBank.findByIdAndUpdate(req.params.id, {$set: {status :'Inactive'}}, (error, data) => {
+    if (error) {
       return next(error);
     } else {
-      res.status(200).json({
-        msg: data
-      })
+      res.json(data)
+      console.log('Data updated successfully')
     }
   })
+})
+
+// Get All Questions matching status='Active'
+quizRoute.route('/getAllActiveQuestions/:status').get((req, res) => {
+  QuestionBank.find({'status': req.params.status} ,(error,output) => {
+      if (error) {
+        console.log('error',error);
+        return next(error);
+      } else {
+        res.json(output);
+        console.log('Data returned successfully');
+      }
+    })
 })
 
 module.exports = quizRoute;
