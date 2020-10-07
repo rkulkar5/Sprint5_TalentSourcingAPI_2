@@ -139,13 +139,20 @@ jrssRoute.route('/getJrsssByAccount/:account').get((req, res) => {
 // Get All Jrss
 jrssRoute.route('/getJRSSPreTechByAccountAndJrssName/:jrssName/:account').get((req, res) => {
   JRSS.aggregate([
-    {$match : { 'jrss':req.params.jrssName,'account':req.params.account }},
+    {$match : { jrss:req.params.jrssName,account:req.params.account }},
     {$lookup:
-      {   from: "preTechQuestionnaire",
-              localField: "jrss",
-              foreignField: "jrss",
-              as: "jrss_preTech"
-      }
+      // {   from: "preTechQuestionnaire",
+      //         localField: "jrss",
+      //         foreignField: "jrss",
+      //         as: "jrss_preTech"
+      // }
+      { from: "preTechQuestionnaire",
+                let: { result_userName: "$jrss" },
+                pipeline: [
+                {$match: { $expr:
+                { $and: [{ $eq: ["$$result_userName", "$jrss"] },
+                { $eq: ["$account", req.params.account] }] } } },
+                ], as: "jrss_preTech" }
     },
     {$sort:
       {
