@@ -4,6 +4,7 @@ const candidateRoute = express.Router();
 
 // Candidate model
 let Candidate = require('../models/Candidate');
+let Login = require('../models/Login');
 //User Model
 let User = require('../models/Login');
 //Questionbank Model
@@ -30,6 +31,21 @@ candidateRoute.route('/candidatejrss/:email').get((req, res, next) => {
     }
   })
 });
+
+// get candidates jrss
+candidateRoute.route('/nameFromUsername/:username').get((req, res, next) => {
+  Login.findOne({'username': req.params.username}, (error, data) => {
+    console.log('req.params.username----'+req.params.username);
+
+    console.log('req.params.username----'+data);
+    if (error) {
+      return next(error)
+    } else {
+      res.json(data)
+    }
+  })
+});
+
 
   // Get candidate by username
 candidateRoute.route('/readCandidate/:username').get((req, res) => {

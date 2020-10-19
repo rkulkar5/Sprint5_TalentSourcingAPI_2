@@ -54,25 +54,13 @@ openPositionRoute.route('/readLatestSequenceID').get((req, res) => {
 
 // List All Open Positions by Job Role
 openPositionRoute.route('/listAllOpenPositionsByJRSS/:account/:status/:JRSS').get((req, res) => {
-console.log('JRSS***** ',req.params.JRSS);
-	if(req.params.account.toLowerCase().indexOf("sector") === -1) {
-        OpenPosition.find({'account': req.params.account, 'status': req.params.status,'JRSS': req.params.JRSS},(error, data) => {
-        if (error) {
-          return next(error)
-        } else {
-          res.json(data)
-        }
-        })
-	} else {
-        OpenPosition.find({'status': req.params.status,'JRSS': req.params.JRSS},(error, data) => {
-        if (error) {
-          return next(error)
-        } else {
-         console.log('*****data******', data);
-          res.json(data)
-        }
-        })
-	}
+OpenPosition.find({'account': req.params.account, 'status': req.params.status,'JRSS': req.params.JRSS},(error, data) => {
+if (error) {
+  return next(error)
+} else {
+  res.json(data)
+}
+})
 })
 
 // Get single open position
