@@ -75,7 +75,7 @@ var corsOptions = {
  //     return next();
 //});
 
-//app.use(cors(whitelist));
+app.use(cors());
 
 app.use(express.static(path.join(__dirname, 'dist/mean-stack-crud-app')));
 app.use('/', express.static(path.join(__dirname, 'dist/mean-stack-crud-app')));
