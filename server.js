@@ -52,7 +52,7 @@ const app = express();
 app.use(bodyParser.json({limit: '1mb'}));
 app.use(bodyParser.urlencoded({limit: '1mb', extended: true}));
 
-var whitelist = ['https://tatclientapp.mybluemix.net']
+var whitelist = ['https://tatclientapp.mybluemix.net','https://tatclientapp.mybluemix.net/*']
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
