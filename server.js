@@ -63,17 +63,17 @@ var corsOptions = {
   }
 }
 
-//app.use(function(req,res, next){
-//   if(req.method == "OPTIONS"){
-//      res.header('Access-Control-Allow-Headers', "*");
-//      res.header('Access-Control-Allow-Methods', "POST, GET, OPTIONS, PUT, PATCH, DELETE");
-//      res.header('Access-Control-Allow-Origin', "*");
-//      res.header('Access-Control-Allow-Credentials', true);
-//      return res.sendStatus(200);
- //   }
- //   else
- //     return next();
-//});
+app.use(function(req,res, next){
+   if(req.method == "OPTIONS"){
+      res.header('Access-Control-Allow-Headers', "*");
+      res.header('Access-Control-Allow-Methods', "POST, GET, OPTIONS, PUT, PATCH, DELETE");
+      res.header('Access-Control-Allow-Origin', "*");
+      res.header('Access-Control-Allow-Credentials', true)
+      return res.sendStatus(200);
+    }
+    else
+     return next();
+});
 
 app.use(cors());
 
