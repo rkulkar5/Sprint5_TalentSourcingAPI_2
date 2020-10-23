@@ -54,7 +54,12 @@ appointmentRoute.route('/getMeetingEventsByCandidate/:candidate').get((req, res,
   MeetingEvents.find({'candidateEmail': req.params.candidate}, (error, data) => {
     if (error) {
       return next(error)
-    } else {
+        } else {
+      res.json(data)
+    }
+  })
+});
+
 
 
 module.exports = appointmentRoute;
