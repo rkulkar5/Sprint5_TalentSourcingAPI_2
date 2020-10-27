@@ -49,4 +49,17 @@ appointmentRoute.route('/getMeetingEventsByLoggedInUser/:loggedInUser').get((req
 });
 
 
+// get MeetingEvents by candidate email 
+appointmentRoute.route('/getMeetingEventsByCandidate/:candidate').get((req, res, next) => {
+  MeetingEvents.find({'candidateEmail': req.params.candidate}, (error, data) => {
+    if (error) {
+      return next(error)
+        } else {
+      res.json(data)
+    }
+  })
+});
+
+
+
 module.exports = appointmentRoute;
