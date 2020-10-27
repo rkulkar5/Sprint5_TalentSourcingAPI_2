@@ -1,4 +1,9 @@
 {
+ "services": {
+   "compose-for-mongodb": [
+     {
+       "credentials": 
+					  {
   "connection": {
     "cli": {
       "arguments": [
@@ -66,4 +71,8 @@
     "instance_id": "crn:v1:bluemix:public:databases-for-mongodb:us-south:a/8181f93cf3b742dbd2ab762ed334ecad:1190a2a4-473b-4c03-8cd8-aded77b5122c::",
     "root": "https://api.us-south.databases.cloud.ibm.com/v5/ibm"
   }
+}
+     }
+   ]
+ }
 }
