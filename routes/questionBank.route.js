@@ -8,6 +8,7 @@ let QuestionBank = require('../models/QuestionBank');
 let PreTechAssessmentAnswer = require('../models/PreTechAssessmentAnswer');
 //PreTechQuestionnaire model
 let PreTechQuestionnaire = require('../models/PreTechQuestionnaire');
+const { isValidObjectId } = require('mongoose');
 
 // Add QuestionBank
 quizRoute.route('/createQuiz').post((req, res, next) => {
@@ -173,12 +174,38 @@ quizRoute.route('/updatequestion/:id').put((req, res, next) => {
   })
 })
 
-
+// View QuestionBank 
+quizRoute.route('/readQuestion/:questionID').get((req, res) => {
+ // var id = req.params.questionID;
+  console.log("req id:" +req.params.id);
+  QuestionBank.find({questionID: req.params.questionID}, (error, data) => {
+    if (error) {
+      return next(error);
+    } else {
+      res.json(data)
+      console.log('Data updated successfully')
+    }
+  })
+})
 
 
 // Delete QuestionBank - Soft Delete Updating Status='Inactive'
 quizRoute.route('/updateQuestionStatus/:id').put((req, res, next) => {
   QuestionBank.findByIdAndUpdate(req.params.id, {$set: {status :'Inactive'}}, (error, data) => {
+    if (error) {
+      return next(error);
+    } else {
+      res.json(data)
+      console.log('Data updated successfully')
+    }
+  })
+})
+
+// Edit QuestionBank - Updating Status='Active' on cancel of edit question
+quizRoute.route('/updateEditQuestionStatus/:id').put((req, res, next) => {
+  console.log("Inside edit question");
+  console.log("req.params.id value:" +req.params.id);
+  QuestionBank.findByIdAndUpdate(req.params.id, {$set: {status :'Active'}}, (error, data) => {
     if (error) {
       return next(error);
     } else {
