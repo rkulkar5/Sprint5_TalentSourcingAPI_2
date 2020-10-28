@@ -10,6 +10,8 @@ mongoose.Promise = global.Promise;
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
+mongoose.set('useUnifiedTopology', true);
+
 mongoose.connect(dbConfig.db, dbConfig.options).then(() => {
       console.log('Database sucessfully connected')
    },

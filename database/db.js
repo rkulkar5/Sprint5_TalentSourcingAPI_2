@@ -48,7 +48,7 @@ console.log("******** INSIDE -certificate_base64 ********");
 }
 
 //db: 'mongodb://localhost:27017/sampleDB'
-module.exports.db = 'mongodb://admin:TATDBAdmin@1190a2a4-473b-4c03-8cd8-aded77b5122c-0.bn2a0fgd0tu045vmv2i0.databases.appdomain.cloud:31109/TATDB?authSource=admin&readPreference=primaryPreferred';
+module.exports.db = 'mongodb://admin:TATDBAdmin@1190a2a4-473b-4c03-8cd8-aded77b5122c-0.bn2a0fgd0tu045vmv2i0.databases.appdomain.cloud:31109/TATDB?authSource=admin&readPreference=primaryPreferred&replicaSet=replset';
 
 module.exports.options = options;
 
