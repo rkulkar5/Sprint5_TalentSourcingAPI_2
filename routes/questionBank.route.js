@@ -183,7 +183,7 @@ quizRoute.route('/readQuestion/:questionID').get((req, res) => {
       return next(error);
     } else {
       res.json(data)
-      console.log('Data updated successfully')
+      console.log('Data fetched successfully')
     }
   })
 })
@@ -204,7 +204,7 @@ quizRoute.route('/updateQuestionStatus/:id').put((req, res, next) => {
 // Edit QuestionBank - Updating Status='Active' on cancel of edit question
 quizRoute.route('/updateEditQuestionStatus/:id').put((req, res, next) => {
   console.log("Inside edit question");
-  console.log("req.params.id value:" +req.params.id);
+ // console.log("req.params.id value:" +req.params.id);
   QuestionBank.findByIdAndUpdate(req.params.id, {$set: {status :'Active'}}, (error, data) => {
     if (error) {
       return next(error);
