@@ -1,10 +1,12 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
 const openPositionRoute = express.Router();
 
 let OpenPosition = require('../models/OpenPosition');
 let RateCard = require('../models/RateCard');
 let CostCard = require('../models/CostCard');
+const ObjectId = mongoose.Types.ObjectId;
 
 // Add Open Position
 openPositionRoute.route('/createOpenPosition').post((req, res, next) => {
@@ -113,7 +115,7 @@ openPositionRoute.route('/updateOpenPosition/:id').put((req, res, next) => {
 
 // Delete Open Position
 openPositionRoute.route('/deleteOpenPosition/:id').delete((req, res, next) => {
-  OpenPosition.findOneAndRemove(req.params.id, (error, data) => {
+  OpenPosition.findOneAndRemove({_id: ObjectId(req.params.id)}, (error, data) => {
     if (error) {
       return next(error);
     } else {
