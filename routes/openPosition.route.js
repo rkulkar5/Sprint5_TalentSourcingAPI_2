@@ -182,7 +182,7 @@ openPositionRoute.route('/listOpenPositions/:account/:status').get((req, res) =>
 
 // Method to close the position by ID
 openPositionRoute.route('/closePosition/:positionID/:status').put((req, res, next) => {
-  OpenPosition.updateOne({_id:req.params.positionID},  {$set:{status:req.params.status}}
+  OpenPosition.updateOne({positionID:req.params.positionID},  {$set:{status:req.params.status}}
   , (error, data) => {
     if (error) {
       return next(error);
