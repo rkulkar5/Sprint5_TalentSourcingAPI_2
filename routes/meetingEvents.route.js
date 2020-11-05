@@ -21,9 +21,8 @@ appointmentRoute.route('/insertMeetingEvents').post((req, res, next) => {
 
 // update MeetingEvents
 
-appointmentRoute.route('/updateMeetingEventsByEventID/:eventID/:candidateEmail').post((req, res, next) => {
-	
-	MeetingEvents.updateOne({'eventID': req.params.eventID, 'candidateEmail': req.params.candidateEmail}, {$set: req.body}, (error, data) => {
+appointmentRoute.route('/updateMeetingEventsByEventID/:eventID').post((req, res, next) => {
+	MeetingEvents.updateOne({'eventID': req.params.eventID}, {$set: req.body}, (error, data) => {
     if (error) {
       console.log(error);
       return next(error);
@@ -47,6 +46,22 @@ appointmentRoute.route('/getMeetingEventsByLoggedInUser/:loggedInUser').get((req
     }
   })
 });
+
+
+
+// get MeetingEvents by Candidate email 
+appointmentRoute.route('/getMeetingEventsByCandidate/:candidateEmail').get((req, res, next) => {
+  MeetingEvents.find({'candidateEmail': req.params.candidateEmail}, (error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.json(data)
+    }
+  })
+});
+
+
+
 
 
 module.exports = appointmentRoute;

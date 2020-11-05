@@ -314,7 +314,6 @@ quizRoute.route('/getOperationsAccountCandidateList/:account').get((req, res) =>
 
  //Get Technical Interview Candidate list
  quizRoute.route('/getTechnicalInterviewList').get((req, res) => {
- console.log('Inside getTechnicalInterviewList *** ')
   Results.aggregate([
    {$match: { $and:[{$or: [{stage1_status:"Completed"},{stage1_status:"Skipped"}]},
                     {$or: [{stage2_status:"Skipped"},{stage2_status:"Completed"}]},
