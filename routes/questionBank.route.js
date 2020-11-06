@@ -127,13 +127,13 @@ quizRoute.route('/getPreTechQuestionanire/:jrss/:userName').get((req, res) => {
       })
     })
 
-//Check for questions per technology stream
-quizRoute.route('/Count/Questions/:technologyStream').get((req, res) => {
-  QuestionBank.count({'technologyStream': req.params.technologyStream }, (error, data) => {
-  if (error) {
+//Check for questions per technology stream and account
+quizRoute.route('/Count/Questions/:technologyStream/:account').get((req, res) => {
+  QuestionBank.count({'technologyStream': req.params.technologyStream,'account': req.params.account }, (error, data) => {
+  if (error) {   
     return next(error)
   } else {
-    console.log ('count for techStream '+req.params.technologyStream+' is '+ data);
+    console.log ('Count for techStream '+req.params.technologyStream+' and account ' +req.params.account+ ' is '+ data);
     res.json({ count : data });
   }
 })

@@ -469,7 +469,27 @@ quizRoute.route("/updateExceptionalApprovalStage4/:id/:quizNumber").put((req, re
   })
 
   //Get Dashboard list
-      quizRoute.route('/getDashboardList').get((req, res) => {
+      quizRoute.route('/getDashboardList/:account').get((req, res) => {
+
+      if(req.params.account != 'SECTOR') {
+      let accountArray = req.params.account.split(",");
+        Results.aggregate([
+           {$lookup: { from: "candidate",
+                       let: { result_userName: "$userName" },
+                       pipeline: [{ $match: { $expr: { $and: [
+                       { $eq: ["$$result_userName", "$username"] },
+                       { $in: ["$account", accountArray] }] } } },
+                       ], as: "result_users" } } ,
+          {$match: {"result_users.account" :{$exists: true }}},
+      	  {$sort:    {'updatedDate': -1 }}
+         ],(error, data) => {
+           if (error) {
+               return next(error)
+             } else {
+               res.json(data)
+             }
+           })
+      } else {
         Results.aggregate([
          {$lookup:
            {   from: "candidate",
@@ -492,6 +512,7 @@ quizRoute.route("/updateExceptionalApprovalStage4/:id/:quizNumber").put((req, re
              res.json(output)
            }
          });
+         }
       })
 
     //Get View Dashboard Details
