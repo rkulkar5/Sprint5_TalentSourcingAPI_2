@@ -52,6 +52,7 @@ quizRoute.route('/read/:rowNum').get((req, res, next) => {
  [
   {$match : {technologyStream: {$in:techStreamArray}}},
   {$match : {complexityLevel: complexityLevel}}, 
+  {$match : {status: 'Active'}},
   {$match : { $or: [
                     {account: account},
                     {account: {$regex: "," + account + "$"}},
@@ -129,7 +130,7 @@ quizRoute.route('/getPreTechQuestionanire/:jrss/:userName').get((req, res) => {
 
 //Check for questions per technology stream and account
 quizRoute.route('/Count/Questions/:technologyStream/:account').get((req, res) => {
-  QuestionBank.count({'technologyStream': req.params.technologyStream,'account': req.params.account }, (error, data) => {
+  QuestionBank.count({'technologyStream': req.params.technologyStream,'account': req.params.account, 'status':'Active' }, (error, data) => {
   if (error) {   
     return next(error)
   } else {
