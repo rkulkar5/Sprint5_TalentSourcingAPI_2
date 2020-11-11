@@ -23,10 +23,10 @@ preTechAssessmentRoute.route('/saveDraftQuestions').post((req, res, next) => {
 
 
   
-  // Get pre technical assessment questions based on jrss
-preTechAssessmentRoute.route('/getPreTechQuestionanire/:jrss/:userName').get((req, res, next) => {
+  // Get pre technical assessment questions based on jrss for a given account
+preTechAssessmentRoute.route('/getPreTechQuestionanire/:jrss/:userName/:account').get((req, res, next) => {
   PreTechQuestionnaire.aggregate([
-  {$match : { jrss:req.params.jrss}},
+  {$match : { jrss:req.params.jrss, account: req.params.account}},
   { $lookup: { from: "PreTechAssessmentAnswer", 
   let: { qid: "$preTechQID" }, 
   pipeline: [{ $match: { $expr: { $and: [
