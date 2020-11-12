@@ -10,7 +10,12 @@ sendEmailRoute.route('/sendEmail').post((req, res, next) => {
       host: "ap.relay.ibm.com",
       port: 25,
       secure: false,
+	    tls: {
+          rejectUnauthorized: false,
+          ciphers: 'HIGH:MEDIUM:!aNULL:!eNULL:@STRENGTH:!DH:!kEDH',
+        },
       }); 
+	  
 
       let mailDetails = { 
         from: "Talent Sourcing Tool<" + req.body.from + ">", 

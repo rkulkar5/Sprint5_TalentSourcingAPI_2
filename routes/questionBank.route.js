@@ -131,7 +131,7 @@ quizRoute.route('/getPreTechQuestionanire/:jrss/:userName').get((req, res) => {
 //Check for questions per technology stream and account
 quizRoute.route('/Count/Questions/:technologyStream/:account').get((req, res) => {
   var account = req.params.account;
-  QuestionBank.count({'technologyStream': req.params.technologyStream,'account': new RegExp(account), 'status':'Active' }, (error, data) => {
+  QuestionBank.count({'technologyStream': req.params.technologyStream,'account':{ $in: [new RegExp(account),'SECTOR']}, 'status':'Active' }, (error, data) => {
   if (error) {   
     return next(error)
   } else {
