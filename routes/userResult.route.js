@@ -550,6 +550,7 @@ quizRoute.route("/updateExceptionalApprovalStage4/:id/:quizNumber").put((req, re
 
 
     quizRoute.route('/getCandidateInterviewStatus/:acct').get((req, res) => {
+      if(req.params.acct != 'SECTOR') {
       let accountArray = req.params.acct.split(",");
       Candidate.aggregate([
        {$match : { 'account': {$in:accountArray} }},
@@ -573,6 +574,29 @@ quizRoute.route("/updateExceptionalApprovalStage4/:id/:quizNumber").put((req, re
            res.json(output)
          }
        });
+       } else {
+            Candidate.aggregate([
+                {$lookup:
+                {   from: "results",
+                        localField: "username",
+                        foreignField: "userName",
+                        as: "candidate_results"
+                }
+              },
+              {$sort:
+                {
+                  'updatedDate': -1
+                },
+
+              }],
+              (error,output) => {
+                if (error) {
+                  return next(error)
+                } else {
+                  res.json(output)
+                }
+              });
+       }
     })
 
      quizRoute.route('/viewCandidateInterviewStatus/:id').get((req, res) => {
