@@ -136,6 +136,20 @@ jrssRoute.route('/getJrsssByAccount/:account').get((req, res) => {
   })
 })
 
+
+// Read Jrss by account and JRSS name
+jrssRoute.route('/readJrssbyAccountAndJrssName/:jrssName/:account').get((req, res) => {
+  JRSS.findOne({'jrss': req.params.jrssName, 'account': req.params.account}, (error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.json(data)
+    }
+  })
+})
+
+
+
 // Get All Jrss
 jrssRoute.route('/getJRSSPreTechByAccountAndJrssName/:jrssName/:account').get((req, res) => {
   JRSS.aggregate([
