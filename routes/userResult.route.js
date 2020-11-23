@@ -629,7 +629,7 @@ quizRoute.route("/updateExceptionalApprovalStage4/:id/:quizNumber").put((req, re
           Results.updateOne({_id:req.params.id,userName:req.params.userName}, {
              $set: {userName:req.body.userName,quizNumber:req.body.quizNumber,userScore:req.body.userScore,
                     stage1_status:req.body.stage1_status,stage2_status:req.body.stage2_status,stage3_status:req.body.stage3_status,smeResult:req.body.smeResult,
-                    stage4_status:req.body.stage4_status,managementResult:req.body.managementResult,stage5_status:req.body.stage5_status}
+                    stage4_status:req.body.stage4_status,managementResult:req.body.managementResult,stage5_status:req.body.stage5_status,exceptionalApprovalComments:req.body.exceptionalApprovalComments}
             }, (error, data) => {
             if (error) {
               console.log(error);

@@ -62,6 +62,9 @@ const ResultsSchema = new Schema({
    },
    createdDate: {
       type: Date
+   },
+   exceptionalApprovalComments: {
+     type: String
    }
 },{
 collection: 'results'}
