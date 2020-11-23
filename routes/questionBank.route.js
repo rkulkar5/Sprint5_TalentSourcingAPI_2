@@ -9,6 +9,7 @@ let PreTechAssessmentAnswer = require('../models/PreTechAssessmentAnswer');
 //PreTechQuestionnaire model
 let PreTechQuestionnaire = require('../models/PreTechQuestionnaire');
 const { isValidObjectId } = require('mongoose');
+let testConfig = require('../models/TestConfig');
 
 // Add QuestionBank
 quizRoute.route('/createQuiz').post((req, res, next) => {
@@ -141,6 +142,46 @@ quizRoute.route('/Count/Questions/:technologyStream/:account').get((req, res) =>
 })
 })
 
+//Check for questions per technology stream, account and complexity level
+quizRoute.route('/Count/Questions/OnComplexity/:technologyStream/:account/:complexity').get((req, res) => {
+  var account = req.params.account;
+  QuestionBank.count({'technologyStream': req.params.technologyStream,'account':{ $in: [new RegExp(account),'SECTOR']}, 'status':'Active', 'complexityLevel': req.params.complexity }, (error, data) => {
+  if (error) {   
+    return next(error)
+  } else {
+    console.log ('***Count for techStream '+req.params.technologyStream+' and account ' + account+' and complexity '+req.params.complexity + ' is '+ data);
+    res.json({ count : data });
+  }
+})
+})
+
+//Check for questions per technology stream, account and complexity level
+quizRoute.route('/Count/Questions/OnComplexity/TechStream/:account/:complexity/:techStream').get((req, res) => {
+  var account = req.params.account;
+  var technologyStream =  req.params.techStream.split(",");
+  QuestionBank.count({'account':{ $in: [new RegExp(account),'SECTOR']}, 'status':'Active', 'complexityLevel': req.params.complexity,'technologyStream':{ $in: technologyStream} }, (error, data) => {
+  if (error) {   
+    return next(error)
+  } else {
+    console.log ('#####Count for techStream '+req.params.techStream+' and account ' + account+' and complexity '+req.params.complexity + ' is '+ data);
+    res.json({ count : data });
+  }
+})
+})  
+
+
+// Check if testConfig Exists for a jrss and account
+quizRoute.route('/findTestConfig/:account/:jrss').get((req, res) => {
+  testConfig.count({'account': req.params.account, 'JRSS': req.params.jrss }, (error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      console.log ('count for testConfig for JRSS '+req.params.jrss+' and account '+req.params.account+' is '+ data);
+      res.json({ count : data });
+    }
+  })
+})
+    
 
 
 
