@@ -35,9 +35,6 @@ candidateRoute.route('/candidatejrss/:email').get((req, res, next) => {
 // get candidates jrss
 candidateRoute.route('/nameFromUsername/:username').get((req, res, next) => {
   Login.findOne({'username': req.params.username}, (error, data) => {
-    console.log('req.params.username----'+req.params.username);
-
-    console.log('req.params.username----'+data);
     if (error) {
       return next(error)
     } else {
