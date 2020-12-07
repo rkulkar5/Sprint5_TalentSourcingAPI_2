@@ -7,7 +7,7 @@ let UserAnswer = require('../models/UserAnswer');
 
 // Add UserAnswer
 quizRoute.route('/saveAns').post((req, res, next) => {
-  UserAnswer.create(req.body, (error, data) => {
+  UserAnswer.insertMany(req.body, (error, data) => {
     if (error) {
       return next(error)
     } else {
